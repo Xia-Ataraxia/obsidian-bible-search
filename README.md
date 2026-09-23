@@ -1,8 +1,10 @@
-# Bible Search for Obsidian
+# Bible Search
 
 Search Korean and English Bible verses and insert them directly into your notes with a configurable template format.
 
-> **This repo is private** due to copyright concerns with Bible text data. It is NOT published to the Obsidian community plugin directory.
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![Release](https://img.shields.io/github/v/release/Xia-Ataraxia/obsidian-bible-search)](https://github.com/Xia-Ataraxia/obsidian-bible-search/releases/latest)
+
+> **Distribution note:** because of copyright concerns with Bible text data, this plugin is NOT published to the Obsidian community plugin directory.
 
 ## Features
 
@@ -15,7 +17,7 @@ Search Korean and English Bible verses and insert them directly into your notes 
 
 ## Installation
 
-Since the repo is private, BRAT cannot fetch releases without a PAT. Use one of:
+Use one of:
 
 ### Direct Copy (Recommended)
 
@@ -33,7 +35,7 @@ Reload Obsidian or run `obsidian plugin:reload id=obsidian-bible-search`.
 Download from the latest GitHub release via `gh`:
 
 ```bash
-gh release download --repo GoBeromsu/obsidian-bible-search \
+gh release download --repo Xia-Ataraxia/obsidian-bible-search \
   --dir "$OBSIDIAN_VAULT_PATH/.obsidian/plugins/obsidian-bible-search/" \
   --pattern 'main.js' --pattern 'manifest.json' --clobber
 ```
@@ -45,13 +47,13 @@ gh release download --repo GoBeromsu/obsidian-bible-search \
 3. Type a book name, chapter, and verse range (e.g. "John 3:16" or "요한복음 3:16-18")
 4. Select the verse and it will be inserted at the cursor using your configured template
 
-## Commands
+### Commands
 
 | Command | Description |
 |---------|-------------|
 | Bible Search: Search verse | Open the verse search modal and insert the selected verse |
 
-## Settings
+### Settings
 
 | Setting | Default | Description |
 |---------|---------|-------------|
@@ -63,7 +65,20 @@ gh release download --repo GoBeromsu/obsidian-bible-search \
 | Cache enabled | `true` | Cache fetched verses in memory |
 | Cache TTL | `30 min` | How long cached verses are kept |
 
-## Tech Stack
+## Development
+
+```bash
+pnpm install
+pnpm dev          # vault selection + esbuild watch + hot reload
+pnpm build        # tsc type-check + production build
+pnpm test         # Vitest unit tests
+pnpm lint         # ESLint
+pnpm run ci       # build + lint + test
+```
+
+Releases: `pnpm run release:patch|minor|major`.
+
+### Tech Stack
 
 | Category | Technology |
 |----------|------------|
@@ -74,7 +89,7 @@ gh release download --repo GoBeromsu/obsidian-bible-search \
 | Testing | Vitest |
 | Linting | ESLint + Husky + lint-staged |
 
-## Pilot Docs
+### Pilot Docs
 
 This repo is the first pilot for the workspace's minimal shared-contract model.
 
@@ -84,7 +99,7 @@ This repo is the first pilot for the workspace's minimal shared-contract model.
 - `docs/runbooks/runtime-smoke.md` — concrete local smoke proof steps
 - `docs/contracts/source-adapter-contract.md` — local adapter invariants and failure buckets
 
-## Project Structure
+### Project Structure
 
 ```
 obsidian-bible-search/
@@ -101,24 +116,14 @@ obsidian-bible-search/
 └── manifest.json            # Obsidian plugin manifest
 ```
 
-## Development
+### Notes for the Workspace Pilot
 
-```bash
-pnpm install
-pnpm dev          # vault selection + esbuild watch + hot reload
-pnpm build        # tsc type-check + production build
-pnpm test         # Vitest unit tests
-pnpm lint         # ESLint
-pnpm run ci       # build + lint + test
-```
-
-## Notes for the Workspace Pilot
-
-- `open-connections` is reference-only for this pilot.
+- `obsidian-open-connections` is reference-only for this pilot.
 - Shared family surfaces are docs, contracts, and harness expectations.
 - Implementation code and deployment-line behavior remain repo-local by default.
 - Former legacy shared helpers have been localized in this repo.
 
+
 ## License
 
-MIT
+[MIT](LICENSE)
