@@ -74,7 +74,7 @@ describe('resolveTemplate', () => {
     }
     const result = resolveTemplate('   ', ctx)
     expect(result).toBe(
-      '> [[John 3]]:3:16\n' +
+      '> [[John 3|John 3:16]]\n' +
       '> 하나님이 세상을 사랑하사...\n' +
       '>\n' +
       '> For God so loved the world...',
