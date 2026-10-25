@@ -34,6 +34,12 @@ describe('migrateSettings', () => {
 			ref: '3:16',
 		})
 	})
+
+	it('returns unchanged=false when migrations are no-ops', () => {
+		const result = migrateSettings({ formatTemplate: '> {verses}' }, [migrateLegacyTemplate, (data) => ({ ...data })])
+
+		expect(result.changed).toBe(false)
+	})
 })
 
 describe('migrateLegacyTemplate', () => {
