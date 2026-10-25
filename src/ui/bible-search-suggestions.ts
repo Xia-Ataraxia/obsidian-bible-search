@@ -42,6 +42,16 @@ export function buildChapterSuggestions(
   return items
 }
 
+/** The lone chapter match to jump to; only while typing forward, so backspacing past ":" sticks. */
+export function autoAdvanceChapter(
+  prevQuery: string,
+  query: string,
+  chapters: BibleSuggestion[],
+): BibleSuggestion | undefined {
+  if (query.length <= prevQuery.length || chapters.length !== 1) return undefined
+  return chapters[0]?.type === 'chapter' ? chapters[0] : undefined
+}
+
 export function buildRangeSuggestion(
   book: BibleBookEntry,
   chapter: number,
@@ -49,15 +59,18 @@ export function buildRangeSuggestion(
   verseEnd: number,
   verses: VerseData[],
 ): BibleSuggestion[] {
-  const selected = verses.filter(v => v.verse >= verseStart && v.verse <= verseEnd)
+  const lo = Math.min(verseStart, verseEnd)
+  const hi = Math.max(verseStart, verseEnd)
+  const selected = verses.filter(v => v.verse >= lo && v.verse <= hi)
   if (selected.length === 0) return []
   const preview = selected.map(v => v.text).join(' ')
+  // Clamp to verses that exist so "3:35-99" is labelled "3:35-36".
   return [{
     type: 'range',
     book,
     chapter,
-    verseStart,
-    verseEnd,
+    verseStart: selected[0]!.verse,
+    verseEnd: selected[selected.length - 1]!.verse,
     preview: truncate(preview, PREVIEW_MAX_LEN),
   }]
 }
@@ -100,6 +113,7 @@ export function renderBibleSuggestion(
     if (isFirst) el.createSpan( { text: 'Enter to insert', cls: 'bible-search-hint' })
     return
   }
-  el.createSpan( { text: `${item.verseStart}-${item.verseEnd}절  ${item.preview}` })
+  const label = item.verseStart === item.verseEnd ? `${item.verseStart}` : `${item.verseStart}-${item.verseEnd}`
+  el.createSpan( { text: `${label}절  ${item.preview}` })
   if (isFirst) el.createSpan( { text: 'Enter to insert', cls: 'bible-search-hint' })
 }

@@ -321,4 +321,22 @@ describe('parseModalInput', () => {
       }
     })
   })
+
+  describe('compact references', () => {
+    it.each([
+      ['요3:16', 'John', 3, '16', undefined],
+      ['John3:16', 'John', 3, '16', undefined],
+      ['창1:1~3', 'Genesis', 1, '1', 3],
+      ['요 3:16~18', 'John', 3, '16', 18],
+      ['요한복음3장16~18절', 'John', 3, '16', 18],
+      ['1 John 1:1', '1 John', 1, '1', undefined],
+    ])('parses %s', (input, bookEn, chapter, filter, rangeEnd) => {
+      expect(parseModalInput(input)).toMatchObject({ mode: 'verse', book: { en: bookEn }, chapter, filter, rangeEnd })
+    })
+
+    it('parses "요3" and "요3장" as chapter mode', () => {
+      expect(parseModalInput('요3')).toMatchObject({ mode: 'chapter', book: { en: 'John' }, filter: '3' })
+      expect(parseModalInput('요3장')).toMatchObject({ mode: 'chapter', book: { en: 'John' }, filter: '3' })
+    })
+  })
 })

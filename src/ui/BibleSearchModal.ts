@@ -1,6 +1,7 @@
 import { App, SuggestModal, Editor } from 'obsidian'
 import { BibleSuggestion } from './bible-suggestion'
 import {
+  autoAdvanceChapter,
   buildChapterSuggestions,
   buildRangeSuggestion,
   buildVerseSuggestions,
@@ -32,6 +33,7 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
   private notices: PluginNotices
   private chapterCache: { key: string; verses: VerseData[] } | null = null
   private renderCount = 0
+  private lastQuery = ''
 
   constructor(
     app: App,
@@ -54,6 +56,8 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
 
   async getSuggestions(query: string): Promise<BibleSuggestion[]> {
     this.renderCount = 0
+    const prevQuery = this.lastQuery
+    this.lastQuery = query
     const state = parseModalInput(query)
 
     if (state.mode === 'book') {
@@ -64,10 +68,8 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
     if (state.mode === 'chapter') {
       this.updatePlaceholder('chapter')
       const chapters = buildChapterSuggestions(state.book, state.filter)
-      // Auto-advance when exactly one chapter matches
-      if (chapters.length === 1) {
-        const only = chapters[0]!
-        if (only.type !== 'chapter') return chapters
+      const only = autoAdvanceChapter(prevQuery, query, chapters)
+      if (only) {
         const newValue = getInputValueForSuggestion(only)
         if (!newValue) return chapters
         this.inputEl.value = newValue
