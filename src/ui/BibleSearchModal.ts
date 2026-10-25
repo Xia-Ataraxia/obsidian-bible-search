@@ -105,11 +105,8 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
         if (err instanceof FetchTimeoutError) {
           this.notices.show('fetch_timeout', { source: 'Bible', seconds: 10 })
         } else {
-          this.notices.show('fetch_chapter_failed', {
-            bookKo: book.ko,
-            chapter,
-            error: err instanceof Error ? err.message : String(err),
-          })
+          console.error('Failed to fetch chapter', err)
+          this.notices.show('fetch_chapter_failed', { bookKo: book.ko, chapter })
         }
         return []
       }
@@ -218,24 +215,21 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
       const results = await Promise.allSettled(fetches)
       window.clearTimeout(progressTimer)
       this.notices.remove('fetching_versions')
-      for (const r of results) {
-        if (r.status === 'rejected') {
-          this.notices.show('fetch_extra_version_failed', {
-            error: r.reason instanceof Error ? r.reason.message : String(r.reason),
-          })
-        }
-      }
+      const failed = pending.filter((_, i) => results[i]?.status === 'rejected')
+      results.forEach(r => { if (r.status === 'rejected') console.error('Failed to fetch extra version', r.reason) })
+      if (failed.length > 0) this.notices.show('fetch_extra_version_failed', { versions: failed.join(', ') })
 
-      const formatted = formatVerses(selected, ref, this.settings, extraVerses)
+      const formatted = formatVerses(selected, ref, this.settings, extraVerses).trimEnd()
+      // Every version the template needs failed; the notice above already says so.
+      if (formatted === '') return
       // A blank line keeps the next insert from joining this callout.
-      this.editor.replaceSelection(`${formatted.trimEnd()}\n\n`)
+      this.editor.replaceSelection(`${formatted}\n\n`)
     } catch (error) {
       if (error instanceof FetchTimeoutError) {
         this.notices.show('fetch_timeout', { source: 'Bible', seconds: 10 })
       } else {
-        this.notices.show('fetch_verse_failed', {
-          error: error instanceof Error ? error.message : String(error),
-        })
+        console.error('Failed to fetch verses', error)
+        this.notices.show('fetch_verse_failed')
       }
     }
   }
