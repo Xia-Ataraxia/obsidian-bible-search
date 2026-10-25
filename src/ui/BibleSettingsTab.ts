@@ -63,6 +63,19 @@ export class BibleSettingsTab extends PluginSettingTab {
         desc: 'Cache fetched chapters in memory.',
         control: { type: 'toggle', key: 'cacheEnabled' },
       },
+      {
+        // Fulfils the "Undo in settings" promise of the mute button.
+        name: 'Restore muted notices',
+        desc: 'Show notices hidden with the mute button again.',
+        visible: () => this.plugin.notices.listMuted().length > 0,
+        render: setting => {
+          setting.addButton(button => button
+            .setButtonText('Restore')
+            .onClick(() => {
+              void this.plugin.notices.unmuteAll().then(() => this.update())
+            }))
+        },
+      },
     ]
   }
 
