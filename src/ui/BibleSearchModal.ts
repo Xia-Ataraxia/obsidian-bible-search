@@ -117,7 +117,8 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
     const items = rangeEnd !== undefined && filter !== ''
       ? buildRangeSuggestion(book, chapter, parseInt(filter, 10), rangeEnd, verses)
       : buildVerseSuggestions(book, chapter, filter, verses)
-    if (items.length === 0) this.emptyStateText = outOfRangeText(book, chapter, verses)
+    // A newer query already reset the empty text; don't overwrite it from a stale fetch.
+    if (items.length === 0 && this.lastQuery === query) this.emptyStateText = outOfRangeText(book, chapter, verses)
     return items
   }
 
