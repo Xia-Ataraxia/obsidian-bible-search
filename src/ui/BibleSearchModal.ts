@@ -82,7 +82,7 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
     this.updatePlaceholder('verse')
     const { book, chapter, filter, rangeEnd } = state
     const cacheKey = `${book.nr}:${chapter}`
-    let verses: VerseData[] | null = null
+    let verses: VerseData[]
 
     if (this.chapterCache?.key === cacheKey) {
       verses = this.chapterCache.verses

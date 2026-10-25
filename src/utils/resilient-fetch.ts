@@ -56,7 +56,7 @@ function isRetryable(status: number): boolean {
 }
 
 function delay(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise(resolve => window.setTimeout(resolve, ms))
 }
 
 /**
@@ -66,11 +66,11 @@ function delay(ms: number): Promise<void> {
  * for small Bible chapter payloads (~25KB).
  */
 function withTimeout<T>(promise: Promise<T>, ms: number, url: string): Promise<T> {
-  let timer: ReturnType<typeof setTimeout>
+  let timer: number
   const timeout = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(new FetchTimeoutError(url, ms)), ms)
+    timer = window.setTimeout(() => reject(new FetchTimeoutError(url, ms)), ms)
   })
-  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer!))
+  return Promise.race([promise, timeout]).finally(() => window.clearTimeout(timer!))
 }
 
 export async function resilientFetch(opts: ResilientFetchOptions): Promise<FetchResponse> {
