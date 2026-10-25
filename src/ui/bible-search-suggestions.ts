@@ -84,6 +84,7 @@ export function renderBibleSuggestion(
   el: HTMLElement,
   isFirst: boolean,
 ): void {
+  el.addClass('bible-search-suggestion')
   if (item.type === 'book') {
     el.createSpan( { text: `${item.book.ko} (${item.book.en})` })
     if (isFirst) el.createSpan( { text: 'Enter to select', cls: 'bible-search-hint' })
