@@ -53,4 +53,11 @@ describe('bible-search-suggestions', () => {
       expect(suggestions[1].text.endsWith('...')).toBe(true)
     }
   })
+
+  it('normalizes reversed ranges and clamps to existing verses', () => {
+    const verses = [35, 36].map(verse => ({ chapter: 3, verse, text: 'x' }))
+    expect(buildRangeSuggestion(JOHN, 3, 35, 99, verses)[0]).toMatchObject({ verseStart: 35, verseEnd: 36 })
+    expect(buildRangeSuggestion(JOHN, 3, 36, 35, verses)[0]).toMatchObject({ verseStart: 35, verseEnd: 36 })
+    expect(buildRangeSuggestion(JOHN, 3, 40, 50, verses)).toEqual([])
+  })
 })

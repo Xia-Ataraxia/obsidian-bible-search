@@ -32,6 +32,7 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
   private notices: PluginNotices
   private chapterCache: { key: string; verses: VerseData[] } | null = null
   private renderCount = 0
+  private lastQuery = ''
 
   constructor(
     app: App,
@@ -54,6 +55,9 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
 
   async getSuggestions(query: string): Promise<BibleSuggestion[]> {
     this.renderCount = 0
+    // Auto-advance only while typing forward, so backspacing past ":" is not undone.
+    const typedForward = query.length > this.lastQuery.length
+    this.lastQuery = query
     const state = parseModalInput(query)
 
     if (state.mode === 'book') {
@@ -65,7 +69,7 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
       this.updatePlaceholder('chapter')
       const chapters = buildChapterSuggestions(state.book, state.filter)
       // Auto-advance when exactly one chapter matches
-      if (chapters.length === 1) {
+      if (chapters.length === 1 && typedForward) {
         const only = chapters[0]!
         if (only.type !== 'chapter') return chapters
         const newValue = getInputValueForSuggestion(only)
