@@ -2,7 +2,7 @@
 
 Search Korean/English Bible verses and insert with configurable template format.
 
-![Searching for John 3:16 in the Bible Search modal and inserting the verse into a note.](https://raw.githubusercontent.com/Xia-Ataraxia/obsidian-bible-search/main/docs/assets/demo.webp)
+![Searching for John 3:16 in the Bible Search modal and inserting it as a quote with a working [[John 3|John 3:16]] link, the Korean text and the English (ESV) text.](https://raw.githubusercontent.com/Xia-Ataraxia/obsidian-bible-search/main/docs/assets/demo.webp)
 
 ## Features
 
