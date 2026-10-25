@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+
 /**
  * Live URL integration tests — verifies that external Bible APIs are reachable
  * and return expected data structures. Skipped in CI to avoid flaky failures.
