@@ -55,7 +55,7 @@ export class SuggestModal<T> {
 export class PluginSettingTab {
   app: App
   plugin: any
-  containerEl: HTMLElement = document.createElement('div')
+  containerEl: HTMLElement = createDiv()
   constructor(_app: App, _plugin: any) {}
   display() {}
 }

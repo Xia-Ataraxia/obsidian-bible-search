@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+
 import { describe, expect, it, vi } from 'vitest'
 
 import {
@@ -31,7 +33,7 @@ describe('resilientFetch', () => {
 
   it('throws FetchTimeoutError when fetch exceeds timeout', async () => {
     const slowFetch: FetchFn = vi.fn(
-      (): Promise<FetchResponse> => new Promise(resolve => setTimeout(() => resolve(OK_RESPONSE), 500)),
+      (): Promise<FetchResponse> => new Promise(resolve => window.setTimeout(() => resolve(OK_RESPONSE), 500)),
     )
     await expect(
       resilientFetch({ url: 'https://slow.com', fetchFn: slowFetch, timeout: 50, maxRetries: 1 }),
