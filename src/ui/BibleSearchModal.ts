@@ -6,15 +6,15 @@ import {
   buildRangeSuggestion,
   buildVerseSuggestions,
   matchBooks,
+  outOfRangeText,
   renderBibleSuggestion,
 } from './bible-search-suggestions'
 import { parseModalInput } from './parse-modal-input'
-import { ParsedReference } from '../utils/reference-parser'
 import { buildParsedReference, getInputValueForSuggestion } from './bible-search-selection'
 import { formatVerses, ExtraVerses } from '../utils/formatter'
 import { fetchChapterVerses } from './fetch-chapter-verses'
 import { VerseCache } from '../domain/verse-cache'
-import { VerseData } from '../types/index'
+import { ParsedReference, VerseData } from '../types/index'
 import { BibleSearchSettings } from '../domain/settings'
 import { detectRequiredFetches } from '../utils/resolve-template'
 import { FetchTimeoutError } from '../utils/resilient-fetch'
@@ -34,6 +34,7 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
   private chapterCache: { key: string; verses: VerseData[] } | null = null
   private renderCount = 0
   private lastQuery = ''
+  private readonly defaultEmptyText = this.emptyStateText
 
   constructor(
     app: App,
@@ -58,6 +59,7 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
     this.renderCount = 0
     const prevQuery = this.lastQuery
     this.lastQuery = query
+    this.emptyStateText = this.defaultEmptyText
     const state = parseModalInput(query)
 
     if (state.mode === 'book') {
@@ -77,12 +79,17 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
         this.inputEl.dispatchEvent(new Event('input'))
         return []
       }
+      if (chapters.length === 0) this.emptyStateText = outOfRangeText(state.book, Number(state.filter))
       return chapters
     }
 
     // verse mode — async fetch
     this.updatePlaceholder('verse')
     const { book, chapter, filter, rangeEnd } = state
+    if (chapter < 1 || chapter > book.maxChapter) {
+      this.emptyStateText = outOfRangeText(book, chapter)
+      return []
+    }
     const cacheKey = `${book.nr}:${chapter}`
     let verses: VerseData[]
 
@@ -98,11 +105,8 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
         if (err instanceof FetchTimeoutError) {
           this.notices.show('fetch_timeout', { source: 'Bible', seconds: 10 })
         } else {
-          this.notices.show('fetch_chapter_failed', {
-            bookKo: book.ko,
-            chapter,
-            error: err instanceof Error ? err.message : String(err),
-          })
+          console.error('Failed to fetch chapter', err)
+          this.notices.show('fetch_chapter_failed', { bookKo: book.ko, chapter })
         }
         return []
       }
@@ -110,14 +114,11 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
       this.chapterCache = { key: cacheKey, verses }
     }
 
-    // Range mode: single item
-    if (rangeEnd !== undefined && filter !== '') {
-      const verseStart = parseInt(filter, 10)
-      return buildRangeSuggestion(book, chapter, verseStart, rangeEnd, verses)
-    }
-
-    // Single verse mode
-    return buildVerseSuggestions(book, chapter, filter, verses)
+    const items = rangeEnd !== undefined && filter !== ''
+      ? buildRangeSuggestion(book, chapter, parseInt(filter, 10), rangeEnd, verses)
+      : buildVerseSuggestions(book, chapter, filter, verses)
+    if (items.length === 0) this.emptyStateText = outOfRangeText(book, chapter, verses)
+    return items
   }
 
   renderSuggestion(item: BibleSuggestion, el: HTMLElement): void {
@@ -184,6 +185,7 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
       const extraVerses: ExtraVerses = {}
       const fetches: Promise<void>[] = []
 
+      const pending: string[] = []
       const queueExtraFetch = (
         extraVersion: string,
         assign: (verses: VerseData[]) => void,
@@ -191,6 +193,7 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
         if (extraVersion === version) {
           assign(selected)
         } else {
+          pending.push(extraVersion)
           fetches.push(
             fetchChapterVerses(extraVersion, ref.bookNr, ref.chapter, this.cache, this.settings.cacheEnabled)
               .then(all => assign(all.filter(v => v.verse >= ref.verseStart && v.verse <= ref.verseEnd))),
@@ -205,24 +208,28 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
         queueExtraFetch(this.settings.englishVersion, v => { extraVerses.english = v })
       }
 
+      // Delay so cache hits resolve without flashing a notice.
+      const progressTimer = window.setTimeout(() => {
+        this.notices.show('fetching_versions', { versions: pending.join(', ') })
+      }, 200)
       const results = await Promise.allSettled(fetches)
-      for (const r of results) {
-        if (r.status === 'rejected') {
-          this.notices.show('fetch_extra_version_failed', {
-            error: r.reason instanceof Error ? r.reason.message : String(r.reason),
-          })
-        }
-      }
+      window.clearTimeout(progressTimer)
+      this.notices.remove('fetching_versions')
+      const failed = pending.filter((_, i) => results[i]?.status === 'rejected')
+      results.forEach(r => { if (r.status === 'rejected') console.error('Failed to fetch extra version', r.reason) })
+      if (failed.length > 0) this.notices.show('fetch_extra_version_failed', { versions: failed.join(', ') })
 
-      const formatted = formatVerses(selected, ref, this.settings, extraVerses)
-      this.editor.replaceSelection(formatted)
+      const formatted = formatVerses(selected, ref, this.settings, extraVerses).trimEnd()
+      // Every version the template needs failed; the notice above already says so.
+      if (formatted === '') return
+      // A blank line keeps the next insert from joining this callout.
+      this.editor.replaceSelection(`${formatted}\n\n`)
     } catch (error) {
       if (error instanceof FetchTimeoutError) {
         this.notices.show('fetch_timeout', { source: 'Bible', seconds: 10 })
       } else {
-        this.notices.show('fetch_verse_failed', {
-          error: error instanceof Error ? error.message : String(error),
-        })
+        console.error('Failed to fetch verses', error)
+        this.notices.show('fetch_verse_failed')
       }
     }
   }

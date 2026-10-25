@@ -20,7 +20,7 @@ const NOTICE_CATALOG: NoticeCatalog = {
     timeout: 6000,
   },
   fetch_chapter_failed: {
-    template: 'Failed to fetch {{bookKo}} {{chapter}}: {{error}}',
+    template: "Couldn't load {{bookKo}} {{chapter}}. Check your connection and try again.",
     timeout: 6000,
   },
   no_verses_found: {
@@ -28,12 +28,17 @@ const NOTICE_CATALOG: NoticeCatalog = {
     timeout: 5000,
   },
   fetch_extra_version_failed: {
-    template: 'Failed to fetch extra version: {{error}}',
+    template: "Couldn't load {{versions}}; left out of the insert.",
     timeout: 6000,
   },
   fetch_verse_failed: {
-    template: 'Failed to fetch verse: {{error}}',
+    template: "Couldn't load the verses. Check your connection and try again.",
     timeout: 6000,
+  },
+  fetching_versions: {
+    template: 'Fetching {{versions}}…',
+    timeout: 0,
+    immutable: true,
   },
   fetch_timeout: {
     template: '{{source}} server timed out after {{seconds}}s — retrying may help',

@@ -18,7 +18,9 @@ export async function fetchChapterVerses(
   }
 
   const verses = await source.fetchChapter(sourceVersion, bookNr, chapter)
-  if (cacheEnabled && verses.length > 0) {
+  // An empty chapter is a failed fetch, not a real chapter with zero verses.
+  if (verses.length === 0) throw new Error(`No verses returned for ${version} ${bookNr}:${chapter}`)
+  if (cacheEnabled) {
     cache.set(version, bookNr, chapter, verses)
   }
   return verses

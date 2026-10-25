@@ -52,6 +52,15 @@ export function autoAdvanceChapter(
   return chapters[0]?.type === 'chapter' ? chapters[0] : undefined
 }
 
+const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? '' : 's'}`
+
+/** Empty-state text for a reference past the end of the book or chapter. */
+export function outOfRangeText(book: BibleBookEntry, chapter: number, verses?: VerseData[]): string {
+  if (chapter < 1 || chapter > book.maxChapter) return `${book.ko} has ${plural(book.maxChapter, 'chapter')}`
+  const last = verses?.[verses.length - 1]?.verse ?? 0
+  return `${book.ko} ${chapter}장 has ${plural(last, 'verse')}`
+}
+
 export function buildRangeSuggestion(
   book: BibleBookEntry,
   chapter: number,

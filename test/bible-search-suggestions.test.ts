@@ -7,6 +7,7 @@ import {
   buildRangeSuggestion,
   buildVerseSuggestions,
   matchBooks,
+  outOfRangeText,
 } from '../src/ui/bible-search-suggestions'
 
 const JOHN = BIBLE_BOOKS.find(book => book.ko === '요한복음')!
@@ -68,5 +69,11 @@ describe('bible-search-suggestions', () => {
     expect(buildRangeSuggestion(JOHN, 3, 35, 99, verses)[0]).toMatchObject({ verseStart: 35, verseEnd: 36 })
     expect(buildRangeSuggestion(JOHN, 3, 36, 35, verses)[0]).toMatchObject({ verseStart: 35, verseEnd: 36 })
     expect(buildRangeSuggestion(JOHN, 3, 40, 50, verses)).toEqual([])
+  })
+
+  it('describes references past the end of the book or chapter', () => {
+    const verses = [1, 2, 36].map(verse => ({ chapter: 3, verse, text: '' }))
+    expect(outOfRangeText(JOHN, 30)).toBe('요한복음 has 21 chapters')
+    expect(outOfRangeText(JOHN, 3, verses)).toBe('요한복음 3장 has 36 verses')
   })
 })

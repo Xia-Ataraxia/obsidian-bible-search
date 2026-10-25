@@ -1,6 +1,5 @@
-import { VerseData } from '../types/index'
+import { ParsedReference, VerseData } from '../types/index'
 import { BibleSearchSettings } from '../domain/settings'
-import { ParsedReference } from './reference-parser'
 import { resolveTemplate, TemplateContext } from './resolve-template'
 
 export interface ExtraVerses {

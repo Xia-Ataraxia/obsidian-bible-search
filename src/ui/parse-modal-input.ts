@@ -10,10 +10,10 @@ export type ModalInputState =
 const CHAPTER_ONLY_RE = /^(.+?)\s*(\d+)$/
 // Matches: "<book> <digits>:<optional-digits><optional -digits>" — verse mode
 const VERSE_RE = /^(.+?)\s*(\d+):(\d*)(?:[-~](\d*))?$/
-// Korean suffix patterns: 장 (chapter), 절 (verse)
-const KOREAN_FULL_RE = /^(.+?)\s*(\d+)장\s*(\d+)(?:[-~](\d+))?절$/
+// Korean suffix patterns: 장/편 (chapter; 편 is used for Psalms), 절 (verse)
+const KOREAN_FULL_RE = /^(.+?)\s*(\d+)[장편]\s*(\d+)(?:[-~](\d+))?절$/
 const KOREAN_VERSE_ONLY_RE = /^(.+?)\s*(\d+)절$/
-const KOREAN_CHAPTER_RE = /^(.+?)\s*(\d+)장$/
+const KOREAN_CHAPTER_RE = /^(.+?)\s*(\d+)[장편]$/
 
 /** Try matching a regex and resolving the book from capture group 1. */
 function tryMatch(
