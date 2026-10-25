@@ -12,7 +12,6 @@ const isCI = !!process.env.CI
 
 // Use native fetch as the transport (no Obsidian dependency in test env)
 const httpFetch: FetchFn = async (params) => {
-  // eslint-disable-next-line no-restricted-globals
   const res = await fetch(params.url, {
     method: params.method ?? 'GET',
     headers: params.headers,
@@ -20,7 +19,7 @@ const httpFetch: FetchFn = async (params) => {
   const text = await res.text()
   let json: unknown = null
   try { json = JSON.parse(text) } catch { /* not JSON */ }
-  return { status: res.status, text, json } as FetchResponse
+  return { status: res.status, text, json }
 }
 
 describe.skipIf(isCI)('Live fetch — BSKorea', () => {
