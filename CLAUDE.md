@@ -1,43 +1,23 @@
 # obsidian-bible-search
 
-Korean/English Bible verse search plugin for Obsidian.
+Korean/English Bible verse search plugin for Obsidian. Root `AGENTS.md` rules apply; see `obsidian-boiler-template/README.md` for the shared layers, CI and release flow.
 
 ## Distribution
 
-**This repo is private** due to copyright concerns with Bible text data. It is NOT published to the Obsidian community plugin directory.
-
-### Installing / Updating
-
-Since the repo is private, BRAT cannot fetch releases without a PAT. Use one of:
-
-1. **Direct copy** (recommended): build locally and copy to vault
-   ```bash
-   pnpm build
-   cp main.js manifest.json "$OBSIDIAN_VAULT_PATH/.obsidian/plugins/obsidian-bible-search/"
-   obsidian plugin:reload id=obsidian-bible-search
-   ```
-2. **GitHub release download**: download `main.js` + `manifest.json` from the latest GitHub release via `gh`
-   ```bash
-   gh release download --repo Xia-Ataraxia/obsidian-bible-search --dir "$OBSIDIAN_VAULT_PATH/.obsidian/plugins/obsidian-bible-search/" --pattern 'main.js' --pattern 'manifest.json' --clobber
-   obsidian plugin:reload id=obsidian-bible-search
-   ```
+The repo is private (Bible text copyright) and not in the community directory. BRAT cannot fetch releases without a PAT: copy `dist/main.js` + `dist/manifest.json` into a vault's plugin folder, or `gh release download --repo Xia-Ataraxia/obsidian-bible-search`.
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Hot reload (requires `.hotreload` in vault plugin dir) |
-| `pnpm build` | Production build (`tsc` + esbuild) |
-| `pnpm test` | Vitest |
-| `pnpm lint` | ESLint |
-| `pnpm release:patch` | Run CI + version bump + push + tag (triggers CI release) |
+`bun run dev` (watch into `dist/`), `build`, `typecheck`, `lint`, `test`, `ci` (all four). `bun run release <bump>` opens a version-bump PR; CI tags and publishes. Never tag locally.
 
-## Release Flow
+## Architecture
 
-`pnpm release:patch` handles the full cycle:
-1. `pnpm run ci`
-2. `pnpm version patch` → bumps `package.json` + `manifest.json` (via `scripts/version.mjs`)
-3. `postversion` → `git push && git push --tags`
-4. Tag push triggers `.github/workflows/release.yml` → builds and creates GitHub release with `main.js`, `manifest.json`
+- `src/main.ts`: lifecycle and wiring.
+- `src/ui/`: Obsidian code (modal, suggest, settings tab, notices, source adapters in `ui/sources/`).
+- `src/domain/`, `src/utils/`, `src/types/`: pure logic, must not import `obsidian` (lint-enforced).
+- Tests in `test/` cover pure logic only.
 
-Do NOT manually create tags or releases — use `pnpm release:patch`.
+## Gotchas
+
+- manifest `id` is `obsidian-bible-search` (contains "obsidian"); published id, never change it.
+- Settings use `getSettingDefinitions()` (minAppVersion 1.13.0); `setControlValue` in `BibleSettingsTab` applies empty-value fallbacks and clears the cache when disabled.

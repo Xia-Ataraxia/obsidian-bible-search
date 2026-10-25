@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "inlineSourceMap": true,
-    "inlineSources": true,
+    "inlineSourceMap": false,
     "module": "ESNext",
     "target": "ES6",
     "allowJs": true,
@@ -10,18 +9,29 @@
     "importHelpers": true,
     "isolatedModules": true,
     "strictNullChecks": true,
-    "strictPropertyInitialization": false,
-    "noUncheckedIndexedAccess": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true,
     "useUnknownInCatchVariables": true,
     "strictBindCallApply": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "types": ["node"],
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "@domain/*": [
+        "./src/domain/*"
+      ],
+      "@ui/*": [
+        "./src/ui/*"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ]
+    },
     "lib": [
       "DOM",
-      "ES5",
-      "ES6",
-      "ES7"
+      "ES2020"
+    ],
+    "types": [
+      "node"
     ]
   },
   "include": [

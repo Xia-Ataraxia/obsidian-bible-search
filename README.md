@@ -24,8 +24,8 @@ Use one of:
 Build locally and copy to your vault:
 
 ```bash
-pnpm build
-cp main.js manifest.json "$OBSIDIAN_VAULT_PATH/.obsidian/plugins/obsidian-bible-search/"
+bun run build
+cp dist/main.js dist/manifest.json "$OBSIDIAN_VAULT_PATH/<configDir>/plugins/obsidian-bible-search/"
 ```
 
 Reload Obsidian or run `obsidian plugin:reload id=obsidian-bible-search`.
@@ -68,15 +68,15 @@ gh release download --repo Xia-Ataraxia/obsidian-bible-search \
 ## Development
 
 ```bash
-pnpm install
-pnpm dev          # vault selection + esbuild watch + hot reload
-pnpm build        # tsc type-check + production build
-pnpm test         # Vitest unit tests
-pnpm lint         # ESLint
-pnpm run ci       # build + lint + test
+bun install
+bun run dev       # esbuild watch into dist/
+bun run build     # production build into dist/
+bun run test      # Vitest unit tests
+bun run lint      # ESLint
+bun run ci        # build + typecheck + lint + test
 ```
 
-Releases: `pnpm run release:patch|minor|major`.
+Releases: `bun run release patch|minor|major` (opens a version-bump PR; CI tags and publishes).
 
 ### Tech Stack
 
@@ -111,8 +111,6 @@ obsidian-bible-search/
 │   ├── types/               # Pure type definitions
 │   └── (no shared impl dir) # Pilot keeps implementation local by default
 ├── docs/                    # Repo-local architecture / harness / pilot prep docs
-├── scripts/                 # dev.mjs, version.mjs, release.mjs
-├── boiler.config.mjs        # Per-repo config
 └── manifest.json            # Obsidian plugin manifest
 ```
 

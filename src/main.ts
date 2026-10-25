@@ -42,9 +42,9 @@ const NOTICE_CATALOG: NoticeCatalog = {
 }
 
 export default class BibleSearchPlugin extends Plugin {
-  settings: BibleSearchSettings
-  cache: VerseCache
-  notices: PluginNotices
+  settings!: BibleSearchSettings
+  cache!: VerseCache
+  notices!: PluginNotices
 
   async onload(): Promise<void> {
     await this.loadSettings()

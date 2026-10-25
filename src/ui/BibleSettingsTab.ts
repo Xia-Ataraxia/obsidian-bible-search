@@ -1,10 +1,18 @@
-import { App, debounce, PluginSettingTab, Setting } from 'obsidian'
+import { App, PluginSettingTab, type SettingDefinitionItem } from 'obsidian'
 import { SUPPORTED_VERSIONS } from './sources/source-registry'
 import { DEFAULT_FORMAT_TEMPLATE } from '../domain/settings'
+import type { BibleSearchSettings } from '../domain/settings'
 import type BibleSearchPlugin from '../main'
 
-const KOREAN_VERSIONS = SUPPORTED_VERSIONS.filter(v => v.language === 'ko')
-const ENGLISH_VERSIONS = SUPPORTED_VERSIONS.filter(v => v.language === 'en')
+const versionOptions = (language?: string): Record<string, string> =>
+  Object.fromEntries(
+    SUPPORTED_VERSIONS.filter(v => !language || v.language === language).map(v => [v.code, v.label]),
+  )
+
+const EMPTY_FALLBACKS: Partial<Record<keyof BibleSearchSettings, string>> = {
+  formatTemplate: DEFAULT_FORMAT_TEMPLATE,
+  calloutType: 'bible',
+}
 
 export class BibleSettingsTab extends PluginSettingTab {
   plugin: BibleSearchPlugin
@@ -14,104 +22,59 @@ export class BibleSettingsTab extends PluginSettingTab {
     this.plugin = plugin
   }
 
-  display(): void {
-    const { containerEl } = this
-    containerEl.empty()
 
-    new Setting(containerEl)
-      .setName('Default version (기본 역본)')
-      .setDesc('Select the default Bible version for searches and {verses} token.')
-      .addDropdown(dropdown => {
-        for (const v of SUPPORTED_VERSIONS) {
-          dropdown.addOption(v.code, v.label)
-        }
-        dropdown.setValue(this.plugin.settings.defaultVersion)
-        dropdown.onChange(async (value) => {
-          this.plugin.settings.defaultVersion = value
-          await this.plugin.saveSettings()
-        })
-      })
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    return [
+      {
+        name: 'Default version (기본 역본)',
+        desc: 'Select the default Bible version for searches and {verses} token.',
+        control: { type: 'dropdown', key: 'defaultVersion', options: versionOptions() },
+      },
+      {
+        name: 'Korean version',
+        desc: 'Korean version for {versesKo} token.',
+        control: { type: 'dropdown', key: 'koreanVersion', options: versionOptions('ko') },
+      },
+      {
+        name: 'English version',
+        desc: 'English version for {versesEn} token.',
+        control: { type: 'dropdown', key: 'englishVersion', options: versionOptions('en') },
+      },
+      {
+        name: 'Format template',
+        desc:
+          'Template for inserted verses. Available tokens: ' +
+          '{bookKo}, {bookEn}, {chapter}, {range}, {verses}, {versesKo}, {versesEn}, ' +
+          '{version}, {versionKo}, {versionEn}, {calloutType}.',
+        control: { type: 'textarea', key: 'formatTemplate', placeholder: DEFAULT_FORMAT_TEMPLATE, rows: 4 },
+      },
+      {
+        name: 'Callout type',
+        desc: 'The callout type identifier used by {calloutType} token (e.g. bible, quote).',
+        control: { type: 'text', key: 'calloutType', placeholder: 'Bible' },
+      },
+      {
+        name: 'Show verse numbers',
+        desc: 'Show verse numbers when inserting multiple verses.',
+        control: { type: 'toggle', key: 'showVerseNumbers' },
+      },
+      {
+        name: 'Enable cache',
+        desc: 'Cache fetched chapters in memory.',
+        control: { type: 'toggle', key: 'cacheEnabled' },
+      },
+    ]
+  }
 
-    new Setting(containerEl)
-      .setName('Korean version')
-      .setDesc('Korean version for {versesKo} token.')
-      .addDropdown(dropdown => {
-        for (const v of KOREAN_VERSIONS) {
-          dropdown.addOption(v.code, v.label)
-        }
-        dropdown.setValue(this.plugin.settings.koreanVersion)
-        dropdown.onChange(async (value) => {
-          this.plugin.settings.koreanVersion = value
-          await this.plugin.saveSettings()
-        })
-      })
+  getControlValue(key: string): unknown {
+    return this.plugin.settings[key as keyof BibleSearchSettings]
+  }
 
-    new Setting(containerEl)
-      .setName('English version')
-      .setDesc('English version for {versesEn} token.')
-      .addDropdown(dropdown => {
-        for (const v of ENGLISH_VERSIONS) {
-          dropdown.addOption(v.code, v.label)
-        }
-        dropdown.setValue(this.plugin.settings.englishVersion)
-        dropdown.onChange(async (value) => {
-          this.plugin.settings.englishVersion = value
-          await this.plugin.saveSettings()
-        })
-      })
-
-    new Setting(containerEl)
-      .setName('Format template')
-      .setDesc(
-        'Template for inserted verses. Available tokens: ' +
-        '{bookKo}, {bookEn}, {chapter}, {range}, {verses}, {versesKo}, {versesEn}, ' +
-        '{version}, {versionKo}, {versionEn}, {calloutType}.',
-      )
-      .addTextArea(textArea => {
-        textArea.setPlaceholder(DEFAULT_FORMAT_TEMPLATE)
-        textArea.setValue(this.plugin.settings.formatTemplate)
-        textArea.inputEl.rows = 4
-        textArea.inputEl.cols = 50
-        const debouncedSave = debounce(() => this.plugin.saveSettings(), 500, true)
-        textArea.onChange((value) => {
-          this.plugin.settings.formatTemplate = value || DEFAULT_FORMAT_TEMPLATE
-          debouncedSave()
-        })
-      })
-
-    new Setting(containerEl)
-      .setName('Callout type')
-      .setDesc('The callout type identifier used by {calloutType} token (e.g. bible, quote).')
-      .addText(text => {
-        text.setPlaceholder('Bible')
-        text.setValue(this.plugin.settings.calloutType)
-        text.onChange(async (value) => {
-          this.plugin.settings.calloutType = value || 'bible'
-          await this.plugin.saveSettings()
-        })
-      })
-
-    new Setting(containerEl)
-      .setName('Show verse numbers')
-      .setDesc('Show verse numbers when inserting multiple verses.')
-      .addToggle(toggle => {
-        toggle.setValue(this.plugin.settings.showVerseNumbers)
-        toggle.onChange(async (value) => {
-          this.plugin.settings.showVerseNumbers = value
-          await this.plugin.saveSettings()
-        })
-      })
-
-    new Setting(containerEl)
-      .setName('Enable cache')
-      .setDesc('Cache fetched chapters in memory.')
-      .addToggle(toggle => {
-        toggle.setValue(this.plugin.settings.cacheEnabled)
-        toggle.onChange(async (value) => {
-          this.plugin.settings.cacheEnabled = value
-          if (!value) this.plugin.cache.clear()
-          await this.plugin.saveSettings()
-        })
-      })
+  async setControlValue(key: string, value: unknown): Promise<void> {
+    const settingKey = key as keyof BibleSearchSettings
+    const settings: Record<string, unknown> = this.plugin.settings
+    settings[settingKey] = value === '' ? EMPTY_FALLBACKS[settingKey] ?? value : value
+    if (settingKey === 'cacheEnabled' && value === false) this.plugin.cache.clear()
+    await this.plugin.saveSettings()
   }
 }

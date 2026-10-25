@@ -163,10 +163,10 @@ When changing an unsafe edge, document:
 
 Use these when reasoning about confidence:
 
-- static: `pnpm run build`
-- lint: `pnpm run lint`
-- tests: `pnpm run test`
-- full repo gate: `pnpm run ci`
+- static: `bun run build`
+- lint: `bun run lint`
+- tests: `bun run test`
+- full repo gate: `bun run ci`
 
 Important test clusters:
 
