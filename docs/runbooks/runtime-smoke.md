@@ -15,7 +15,7 @@ This is a repo-local runbook:
 ## Preconditions
 
 - Obsidian test vault is available
-- plugin is built (`pnpm run build`) or CI already proved build/lint/test
+- plugin is built (`bun run build`) or CI already proved build/lint/test
 - plugin files are present in the test vault plugin directory
 
 ## Minimum Smoke Flow

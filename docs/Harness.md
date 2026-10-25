@@ -22,17 +22,17 @@ See also:
 
 Run:
 
-- `pnpm run build` (`tsc -noEmit -skipLibCheck` + production bundle)
-- `pnpm run lint`
-- `pnpm run test`
+- `bun run build` (`tsc -noEmit -skipLibCheck` + production bundle)
+- `bun run lint`
+- `bun run test`
 
 Combined gate:
 
-- `pnpm run ci`
+- `bun run ci`
 
 Typecheck note:
 
-- this repo currently proves type safety through `pnpm run build`, because the `build` script includes the `tsc -noEmit -skipLibCheck` step before bundling
+- this repo currently proves type safety through `bun run build`, because the `build` script includes the `tsc -noEmit -skipLibCheck` step before bundling
 
 ## 2. Runtime smoke proof
 
@@ -97,7 +97,7 @@ This repo should not share by default:
 
 ## Pilot Checklist
 
-- [ ] `pnpm run ci` passes
+- [ ] `bun run ci` passes
 - [ ] architecture doc stays accurate
 - [ ] runtime smoke expectations are documented
 - [ ] release-note contract is referenced
