@@ -52,13 +52,19 @@ export function autoAdvanceChapter(
   return chapters[0]?.type === 'chapter' ? chapters[0] : undefined
 }
 
-const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? '' : 's'}`
+/** Topic particle 은/는, chosen by whether the last Hangul syllable has a final consonant. */
+function topic(word: string): string {
+  const code = word.charCodeAt(word.length - 1) - 0xac00
+  return code >= 0 && code < 11172 && code % 28 === 0 ? '는' : '은'
+}
 
 /** Empty-state text for a reference past the end of the book or chapter. */
 export function outOfRangeText(book: BibleBookEntry, chapter: number, verses?: VerseData[]): string {
-  if (chapter < 1 || chapter > book.maxChapter) return `${book.ko} has ${plural(book.maxChapter, 'chapter')}`
+  // Psalms count 편, every other book 장.
+  const unit = book.nr === 19 ? '편' : '장'
+  if (chapter < 1 || chapter > book.maxChapter) return `${book.ko}${topic(book.ko)} ${book.maxChapter}${unit}까지 있습니다`
   const last = verses?.[verses.length - 1]?.verse ?? 0
-  return `${book.ko} ${chapter}장 has ${plural(last, 'verse')}`
+  return `${book.ko} ${chapter}${unit}은 ${last}절까지 있습니다`
 }
 
 export function buildRangeSuggestion(

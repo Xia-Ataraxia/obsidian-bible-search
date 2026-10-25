@@ -64,6 +64,22 @@
 	height: 14px;
 }
 
+.plugin-notice--busy .plugin-notice-content::before {
+	content: '';
+	display: inline-block;
+	width: 6px;
+	height: 6px;
+	margin-right: 8px;
+	border-radius: 50%;
+	background: var(--interactive-accent);
+	vertical-align: middle;
+	animation: plugin-notice-pulse 900ms ease-in-out infinite alternate;
+}
+
+@keyframes plugin-notice-pulse {
+	from { opacity: 0.35; transform: scale(0.7); }
+}
+
 /* Suggestions */
 .bible-search-suggestion {
 	display: flex;
@@ -105,6 +121,15 @@
 
 	.bible-search-hint {
 		animation: bible-fade 400ms ease 120ms backwards;
+	}
+
+	/* Slower, opacity-only pulse so progress stays visible. */
+	.plugin-notice--busy .plugin-notice-content::before {
+		animation: plugin-notice-breathe 1800ms ease-in-out infinite alternate;
+	}
+
+	@keyframes plugin-notice-breathe {
+		from { opacity: 0.45; }
 	}
 
 	@keyframes bible-fade {

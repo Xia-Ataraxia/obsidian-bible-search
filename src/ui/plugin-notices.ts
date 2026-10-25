@@ -35,6 +35,7 @@ export class PluginNotices {
 			prefix: this.prefix,
 			text: message,
 			immutable,
+			busy: definition?.busy,
 			button: opts?.button
 				? {
 						text: opts.button.text,

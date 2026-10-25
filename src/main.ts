@@ -39,6 +39,7 @@ const NOTICE_CATALOG: NoticeCatalog = {
     template: 'Fetching {{versions}}…',
     timeout: 0,
     immutable: true,
+    busy: true,
   },
   fetch_timeout: {
     template: '{{source}} server timed out after {{seconds}}s — retrying may help',
