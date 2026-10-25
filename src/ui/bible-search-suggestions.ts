@@ -42,6 +42,16 @@ export function buildChapterSuggestions(
   return items
 }
 
+/** The lone chapter match to jump to; only while typing forward, so backspacing past ":" sticks. */
+export function autoAdvanceChapter(
+  prevQuery: string,
+  query: string,
+  chapters: BibleSuggestion[],
+): BibleSuggestion | undefined {
+  if (query.length <= prevQuery.length || chapters.length !== 1) return undefined
+  return chapters[0]?.type === 'chapter' ? chapters[0] : undefined
+}
+
 export function buildRangeSuggestion(
   book: BibleBookEntry,
   chapter: number,

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { BIBLE_BOOKS } from '../src/domain/book-map'
 import {
+  autoAdvanceChapter,
   buildChapterSuggestions,
   buildRangeSuggestion,
   buildVerseSuggestions,
@@ -11,6 +12,14 @@ import {
 const JOHN = BIBLE_BOOKS.find(book => book.ko === '요한복음')!
 
 describe('bible-search-suggestions', () => {
+  it('auto-advances a lone chapter only while typing forward', () => {
+    const one = buildChapterSuggestions(JOHN, '3').filter(s => s.type === 'chapter' && s.chapter === 3)
+    expect(autoAdvanceChapter('요 ', '요 3', one)).toBe(one[0])
+    // Backspacing "요한복음 3:" to "요한복음 3" must not jump back to "3:"
+    expect(autoAdvanceChapter('요한복음 3:', '요한복음 3', one)).toBeUndefined()
+    expect(autoAdvanceChapter('요 ', '요 1', buildChapterSuggestions(JOHN, '1'))).toBeUndefined()
+  })
+
   it('matches books across Korean and English fuzzy queries', () => {
     expect(matchBooks('요')).toEqual(expect.arrayContaining([JOHN]))
     expect(matchBooks('Jhn')).toEqual(expect.arrayContaining([JOHN]))
