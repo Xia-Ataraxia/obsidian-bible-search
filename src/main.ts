@@ -35,6 +35,11 @@ const NOTICE_CATALOG: NoticeCatalog = {
     template: 'Failed to fetch verse: {{error}}',
     timeout: 6000,
   },
+  fetching_versions: {
+    template: 'Fetching {{versions}}…',
+    timeout: 0,
+    immutable: true,
+  },
   fetch_timeout: {
     template: '{{source}} server timed out after {{seconds}}s — retrying may help',
     timeout: 6000,

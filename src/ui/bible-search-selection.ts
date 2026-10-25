@@ -1,4 +1,4 @@
-import { ParsedReference } from '../utils/reference-parser'
+import { ParsedReference } from '../types/index'
 import { BibleSuggestion } from './bible-suggestion'
 
 export function getInputValueForSuggestion(value: BibleSuggestion): string | null {

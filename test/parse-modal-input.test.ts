@@ -339,4 +339,64 @@ describe('parseModalInput', () => {
       expect(parseModalInput('요3장')).toMatchObject({ mode: 'chapter', book: { en: 'John' }, filter: '3' })
     })
   })
+
+  describe('book names and abbreviations', () => {
+    // Ported from the removed parseReference suite so lookup coverage stays on the live parser.
+    it.each([
+    ["요한복음 3:16", 43, 3, 16, 16],
+    ["창세기 1:1", 1, 1, 1, 1],
+    ["마태복음 5:3", 40, 5, 3, 3],
+    ["요한일서 3:16", 62, 3, 16, 16],
+    ["예레미야애가 3:22", 25, 3, 22, 22],
+    ["요 3:16", 43, 3, 16, 16],
+    ["창 1:1", 1, 1, 1, 1],
+    ["고전 13:4", 46, 13, 4, 4],
+    ["살전 4:13", 52, 4, 13, 13],
+    ["요일 2:1", 62, 2, 1, 1],
+    ["벧전 5:7", 60, 5, 7, 7],
+    ["John 3:16", 43, 3, 16, 16],
+    ["Genesis 1:1", 1, 1, 1, 1],
+    ["Revelation 22:20", 66, 22, 20, 20],
+    ["Psalms 23:1", 19, 23, 1, 1],
+    ["Gen 1:1", 1, 1, 1, 1],
+    ["Matt 5:3", 40, 5, 3, 3],
+    ["Rom 8:28", 45, 8, 28, 28],
+    ["Rev 21:4", 66, 21, 4, 4],
+    ["Ps 23:1", 19, 23, 1, 1],
+    ["요 3:16-18", 43, 3, 16, 18],
+    ["Gen 1:1-5", 1, 1, 1, 5],
+    ["1Cor 13:4-7", 46, 13, 4, 7],
+    ["창 1:1-31", 1, 1, 1, 31],
+    ["1Sam 3:10", 9, 3, 10, 10],
+    ["2Sam 12:13", 10, 12, 13, 13],
+    ["1Kgs 18:38", 11, 18, 38, 38],
+    ["1Thess 4:16", 52, 4, 16, 16],
+    ["2Cor 5:17", 47, 5, 17, 17],
+    ["1John 3:16", 62, 3, 16, 16],
+    ["3John 1:4", 64, 1, 4, 4],
+    ["  창 1:1  ", 1, 1, 1, 1],
+    ["창   1:1", 1, 1, 1, 1],
+    ["genesis 1:1", 1, 1, 1, 1],
+    ["JOHN 3:16", 43, 3, 16, 16],
+    ["gEN 1:1", 1, 1, 1, 1],
+    ])('parses %j', (input, bookNr, chapter, verseStart, verseEnd) => {
+      const result = parseModalInput(input)
+      expect(result).toMatchObject({ mode: 'verse', book: { nr: bookNr }, chapter, filter: String(verseStart) })
+      if (result.mode === 'verse') expect(result.rangeEnd ?? verseStart).toBe(verseEnd)
+    })
+
+    it.each(['', '3:16', 'xyz 3:16', '요한복음', 'John'])('does not parse %j as a verse', input => {
+      expect(parseModalInput(input).mode).not.toBe('verse')
+    })
+  })
+
+  describe('편 for Psalms', () => {
+    it('parses "시 23편" as chapter mode', () => {
+      expect(parseModalInput('시 23편')).toMatchObject({ mode: 'chapter', book: { ko: '시편' }, filter: '23' })
+    })
+
+    it('parses "시편 23편 1-3절" as a verse range', () => {
+      expect(parseModalInput('시편 23편 1-3절')).toMatchObject({ mode: 'verse', book: { ko: '시편' }, chapter: 23, filter: '1', rangeEnd: 3 })
+    })
+  })
 })

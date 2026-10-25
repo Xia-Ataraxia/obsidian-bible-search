@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { DEFAULT_SETTINGS } from '../src/domain/settings'
 import { VerseData } from '../src/types/index'
 import { formatVerses } from '../src/utils/formatter'
-import { ParsedReference } from '../src/utils/reference-parser'
+import { ParsedReference } from '../src/types/index'
 
 const GENESIS_1_1: VerseData = { chapter: 1, verse: 1, text: '태초에 하나님이 천지를 창조하시니라' }
 const GENESIS_1_2: VerseData = { chapter: 1, verse: 2, text: '땅이 혼돈하고 공허하며...' }

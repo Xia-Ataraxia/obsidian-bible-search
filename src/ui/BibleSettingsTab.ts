@@ -51,7 +51,7 @@ export class BibleSettingsTab extends PluginSettingTab {
       {
         name: 'Callout type',
         desc: 'The callout type identifier used by {calloutType} token (e.g. bible, quote).',
-        control: { type: 'text', key: 'calloutType', placeholder: 'Bible' },
+        control: { type: 'text', key: 'calloutType', placeholder: 'bible' },
       },
       {
         name: 'Show verse numbers',
