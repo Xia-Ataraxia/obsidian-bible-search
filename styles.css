@@ -37,9 +37,9 @@
 }
 
 .plugin-notice-btn {
-	border: 1px solid rgba(255, 255, 255, 0.2);
+	border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
 	border-radius: var(--radius-s, 6px);
-	background: rgba(255, 255, 255, 0.1);
+	background: color-mix(in srgb, currentColor 10%, transparent);
 	color: inherit;
 	font-size: var(--font-smallest, 11px);
 	padding: 2px 8px;
@@ -47,7 +47,7 @@
 }
 
 .plugin-notice-btn:hover {
-	background: rgba(255, 255, 255, 0.2);
+	background: color-mix(in srgb, currentColor 20%, transparent);
 }
 
 .plugin-notice-btn--mute {
