@@ -6,6 +6,18 @@ import { Notice } from 'obsidian'
 import { PluginNotices } from '../../src/ui/plugin-notices'
 import type { NoticeCatalog, PluginNoticesHost } from '../../src/ui/plugin-notice-types'
 
+// jsdom lacks Obsidian's global DOM helpers.
+function createEl(tag: string, o: { cls?: string; text?: string; type?: string } = {}): HTMLElement {
+	const el = document.createElement(tag)
+	if (o.cls) el.className = o.cls
+	if (o.text) el.textContent = o.text
+	if (o.type) el.setAttribute('type', o.type)
+	return el
+}
+vi.stubGlobal('createEl', createEl)
+vi.stubGlobal('createDiv', (o?: { cls?: string }) => createEl('div', o))
+vi.stubGlobal('createFragment', () => document.createDocumentFragment())
+
 describe('PluginNotices', () => {
 	it('interpolates messages and reuses an active notice by id', () => {
 		const plugin = createHost()
