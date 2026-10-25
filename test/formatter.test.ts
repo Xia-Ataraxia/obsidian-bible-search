@@ -18,6 +18,11 @@ const GEN_1_1_3_REF: ParsedReference = { bookNr: 1, bookKo: '창세기', bookEn:
 const CLASSIC_TEMPLATE = '> {bookKo} ({bookEn}) {range}\n> {verses}'
 
 describe('formatVerses', () => {
+  it('default template links the chapter and shows the verse reference', () => {
+    const result = formatVerses([JOHN_3_16], JOHN_REF, DEFAULT_SETTINGS, { korean: [JOHN_3_16], english: [JOHN_3_16] })
+    expect(result.split('\n')[0]).toBe('> [[John 3|John 3:16]]')
+  })
+
   describe('classic blockquote template', () => {
     const classicSettings = { ...DEFAULT_SETTINGS, formatTemplate: CLASSIC_TEMPLATE }
 

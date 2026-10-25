@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { DEFAULT_FORMAT_TEMPLATE, LEGACY_FORMAT_TEMPLATE, migrateLegacyTemplate } from '../../src/domain/settings'
 import { migrateSettings } from '../../src/domain/settings-migration'
 
 describe('migrateSettings', () => {
@@ -32,5 +33,16 @@ describe('migrateSettings', () => {
 			verse: 16,
 			ref: '3:16',
 		})
+	})
+})
+
+describe('migrateLegacyTemplate', () => {
+	it('upgrades the old default template', () => {
+		expect(migrateLegacyTemplate({ formatTemplate: LEGACY_FORMAT_TEMPLATE }).formatTemplate).toBe(DEFAULT_FORMAT_TEMPLATE)
+	})
+
+	it('keeps custom templates', () => {
+		const data = { formatTemplate: '> {verses}' }
+		expect(migrateLegacyTemplate(data)).toBe(data)
 	})
 })

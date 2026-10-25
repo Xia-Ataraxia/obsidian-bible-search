@@ -1,5 +1,14 @@
-export const DEFAULT_FORMAT_TEMPLATE =
+export const LEGACY_FORMAT_TEMPLATE =
   '> [[{bookEn} {chapter}]]:{range}\n> {versesKo}\n>\n> {versesEn}'
+
+export const DEFAULT_FORMAT_TEMPLATE =
+  '> [[{bookEn} {chapter}|{bookEn} {range}]]\n> {versesKo}\n>\n> {versesEn}'
+
+/** Upgrades the old default, which rendered `[[John 3]]:3:16`; custom templates are untouched. */
+export function migrateLegacyTemplate(data: Record<string, unknown>): Record<string, unknown> {
+  if (data.formatTemplate !== LEGACY_FORMAT_TEMPLATE) return data
+  return { ...data, formatTemplate: DEFAULT_FORMAT_TEMPLATE }
+}
 
 export interface BibleSearchSettings {
   defaultVersion: string

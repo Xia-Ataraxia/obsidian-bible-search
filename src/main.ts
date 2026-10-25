@@ -1,5 +1,5 @@
 import { Editor, Notice, Plugin } from 'obsidian'
-import { BibleSearchSettings, DEFAULT_FORMAT_TEMPLATE, DEFAULT_SETTINGS } from './domain/settings'
+import { BibleSearchSettings, DEFAULT_FORMAT_TEMPLATE, DEFAULT_SETTINGS, migrateLegacyTemplate } from './domain/settings'
 import { BibleSearchModal } from './ui/BibleSearchModal'
 import { BibleSettingsTab } from './ui/BibleSettingsTab'
 import { VerseCache } from './domain/verse-cache'
@@ -91,6 +91,7 @@ export default class BibleSearchPlugin extends Plugin {
         }
         return data
       },
+      migrateLegacyTemplate,
     ]
 
     const { data, changed } = migrateSettings(raw, migrations)
