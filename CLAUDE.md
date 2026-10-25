@@ -18,7 +18,7 @@ Since the repo is private, BRAT cannot fetch releases without a PAT. Use one of:
    ```
 2. **GitHub release download**: download `main.js` + `manifest.json` from the latest GitHub release via `gh`
    ```bash
-   gh release download --repo GoBeromsu/obsidian-bible-search --dir "$OBSIDIAN_VAULT_PATH/.obsidian/plugins/obsidian-bible-search/" --pattern 'main.js' --pattern 'manifest.json' --clobber
+   gh release download --repo Xia-Ataraxia/obsidian-bible-search --dir "$OBSIDIAN_VAULT_PATH/.obsidian/plugins/obsidian-bible-search/" --pattern 'main.js' --pattern 'manifest.json' --clobber
    obsidian plugin:reload id=obsidian-bible-search
    ```
 

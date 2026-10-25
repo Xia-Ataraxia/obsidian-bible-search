@@ -10,11 +10,11 @@ It does **not**:
 
 - change plugin behavior
 - centralize repo-specific runtime code
-- use `open-connections` as a migration target
+- use `obsidian-open-connections` as a migration target
 
 ## Reference Rule
 
-`open-connections` may inform:
+`obsidian-open-connections` may inform:
 
 - architecture doc structure
 - harness/runbook discipline
