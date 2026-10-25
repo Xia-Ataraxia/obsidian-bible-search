@@ -73,7 +73,9 @@ describe('bible-search-suggestions', () => {
 
   it('describes references past the end of the book or chapter', () => {
     const verses = [1, 2, 36].map(verse => ({ chapter: 3, verse, text: '' }))
-    expect(outOfRangeText(JOHN, 30)).toBe('요한복음 has 21 chapters')
-    expect(outOfRangeText(JOHN, 3, verses)).toBe('요한복음 3장 has 36 verses')
+    expect(outOfRangeText(JOHN, 30)).toBe('요한복음은 21장까지 있습니다')
+    expect(outOfRangeText(JOHN, 3, verses)).toBe('요한복음 3장은 36절까지 있습니다')
+    expect(outOfRangeText(BIBLE_BOOKS[0]!, 51)).toBe('창세기는 50장까지 있습니다')
+    expect(outOfRangeText(BIBLE_BOOKS[18]!, 151)).toBe('시편은 150편까지 있습니다')
   })
 })

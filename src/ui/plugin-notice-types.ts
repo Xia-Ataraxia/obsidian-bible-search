@@ -2,6 +2,8 @@ export interface NoticeDefinition {
 	template: string
 	timeout?: number
 	immutable?: boolean
+	/** Shows a pulsing indicator while work is in flight. */
+	busy?: boolean
 }
 
 export type NoticeCatalog = Record<string, NoticeDefinition>

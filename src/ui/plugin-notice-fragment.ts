@@ -5,13 +5,14 @@ interface BuildNoticeFragmentOptions {
 	prefix: string
 	text: string
 	immutable: boolean
+	busy?: boolean
 	button?: { text: string; callback: () => void }
 	onMute: (id: string) => void
 }
 
 export function buildNoticeFragment(opts: BuildNoticeFragmentOptions): DocumentFragment {
 	const fragment = createFragment()
-	const wrapper = createDiv({ cls: 'plugin-notice' })
+	const wrapper = createDiv({ cls: opts.busy ? 'plugin-notice plugin-notice--busy' : 'plugin-notice' })
 
 	wrapper.appendChild(createEl('p', { cls: 'plugin-notice-head', text: `[${opts.prefix}]` }))
 	wrapper.appendChild(createEl('p', { cls: 'plugin-notice-content', text: opts.text }))
