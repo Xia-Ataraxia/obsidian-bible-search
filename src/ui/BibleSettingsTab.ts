@@ -68,8 +68,12 @@ export class BibleSettingsTab extends PluginSettingTab {
         name: 'Restore muted notices',
         desc: 'Show notices hidden with the mute button again.',
         visible: () => this.plugin.notices.listMuted().length > 0,
-        action: () => {
-          void this.plugin.notices.unmuteAll().then(() => this.display())
+        render: setting => {
+          setting.addButton(button => button
+            .setButtonText('Restore')
+            .onClick(() => {
+              void this.plugin.notices.unmuteAll().then(() => this.update())
+            }))
         },
       },
     ]

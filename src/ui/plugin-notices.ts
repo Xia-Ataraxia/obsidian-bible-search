@@ -8,6 +8,7 @@ import {
 
 const BUILTIN_TEMPLATES: Record<string, string> = {
 	notice_muted: 'Notice muted. Undo in settings.',
+	notices_unmuted: 'Notices unmuted.',
 }
 
 export class PluginNotices {
@@ -26,7 +27,8 @@ export class PluginNotices {
 		const definition = this.catalog[id]
 		const template = definition?.template ?? BUILTIN_TEMPLATES[id] ?? id
 		const timeout = opts?.timeout ?? definition?.timeout ?? 5000
-		const immutable = definition?.immutable ?? false
+		// Built-in confirmations can't be muted; muting them would hide the mute feedback itself.
+		const immutable = definition?.immutable ?? id in BUILTIN_TEMPLATES
 		const message = this.interpolate(template, params ?? {})
 		const fragment = buildNoticeFragment({
 			id,
@@ -88,6 +90,7 @@ export class PluginNotices {
 		if (Object.keys(store).length === 0) return
 		this.getPluginNoticesSettings().muted = {}
 		await this.plugin.saveSettings()
+		this.show('notices_unmuted', {}, { timeout: 2000 })
 	}
 
 	isMuted(id: string): boolean {
