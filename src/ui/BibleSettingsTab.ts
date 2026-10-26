@@ -114,9 +114,7 @@ export class BibleSettingsTab extends PluginSettingTab {
   setControlValue(key: string, value: unknown): void {
     const settingKey = key as keyof BibleSearchSettings
     const settings: Record<string, unknown> = this.plugin.settings
-    const hadCallout = this.usesCalloutType()
     settings[settingKey] = value === '' ? EMPTY_FALLBACKS[settingKey] ?? value : value
-    if (this.usesCalloutType() !== hadCallout) this.update()
     if (settingKey === 'cacheEnabled' && value === false) this.plugin.cache.clear()
     this.saveSoon()
   }
