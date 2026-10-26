@@ -26,6 +26,8 @@ This plugin is not in the Community plugins directory because of copyright conce
 
 **Manual**: download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/Xia-Ataraxia/obsidian-bible-search/releases/latest) into `<vault>/<configDir>/plugins/multilingual-bible-search/`, then enable the plugin. `<configDir>` is your vault's configuration folder (`.obsidian` by default).
 
+**Upgrading from the old id**: the plugin id changed from `obsidian-bible-search` to `multilingual-bible-search` before a Community listing, because ids may not contain "obsidian". If you installed it manually or through BRAT, reinstall it. Your settings stay in the old `obsidian-bible-search` folder, so re-enter them or copy its `data.json` into the new folder, then remove the old plugin.
+
 ## Network and sources
 
 Verse text is fetched on demand from two public sites:
