@@ -81,6 +81,15 @@
 	from { opacity: 0.35; transform: scale(0.7); }
 }
 
+/* Settings */
+.bible-search-format-group textarea {
+	width: 42ch;
+	max-width: 100%;
+	font-family: var(--font-monospace);
+	font-size: var(--font-ui-small);
+	resize: vertical;
+}
+
 /* Suggestions */
 .bible-search-suggestion {
 	display: flex;
