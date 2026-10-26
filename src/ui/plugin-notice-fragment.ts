@@ -14,12 +14,12 @@ export function buildNoticeFragment(opts: BuildNoticeFragmentOptions): DocumentF
 	const fragment = createFragment()
 	const wrapper = createDiv({ cls: opts.busy ? 'bible-search-notice bible-search-notice--busy' : 'bible-search-notice' })
 
-	const head = wrapper.createDiv({ cls: 'bible-search-notice-head' })
-	head.createSpan({ text: opts.prefix })
+	wrapper.createDiv({ cls: 'bible-search-notice-head', text: opts.prefix })
+	const row = wrapper.createDiv({ cls: 'bible-search-notice-row' })
+	row.createEl('p', { cls: 'bible-search-notice-content', text: opts.text })
 	if (!opts.immutable) {
-		head.appendChild(createMuteButton(opts.id, opts.onMute))
+		row.appendChild(createMuteButton(opts.id, opts.onMute))
 	}
-	wrapper.appendChild(createEl('p', { cls: 'bible-search-notice-content', text: opts.text }))
 
 	if (opts.button?.text && typeof opts.button.callback === 'function') {
 		wrapper.createDiv({ cls: 'bible-search-notice-actions' }).appendChild(createActionButton(opts.button.text, opts.button.callback))
