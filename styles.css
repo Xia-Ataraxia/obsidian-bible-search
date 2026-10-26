@@ -47,7 +47,7 @@
 	flex-shrink: 0;
 	margin: calc(var(--size-2-2) * -1) calc(var(--size-2-2) * -1) calc(var(--size-2-2) * -1) 0;
 	color: inherit;
-	--icon-size: var(--icon-xs);
+	--icon-size: var(--icon-s);
 }
 
 .bible-search-notice-mute:hover {
