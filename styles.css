@@ -129,6 +129,23 @@
 	display: none;
 }
 
+.bible-search-source {
+	padding: var(--size-4-2) var(--size-4-4);
+	border-top: var(--border-width) solid var(--background-modifier-border);
+	font-size: var(--font-smallest);
+	color: var(--text-muted);
+}
+
+.bible-search-source a {
+	color: inherit;
+	text-decoration-color: var(--text-faint);
+	transition: color 120ms ease;
+}
+
+.bible-search-source a:hover {
+	color: var(--text-normal);
+}
+
 @keyframes bible-suggestion-in {
 	from { opacity: 0; transform: translateY(4px); }
 }

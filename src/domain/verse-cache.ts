@@ -8,9 +8,12 @@ interface CacheEntry {
 export class VerseCache {
   private cache = new Map<string, CacheEntry>()
   private ttlMs: number
+  private maxEntries: number
 
-  constructor(ttlMinutes: number = 30) {
+  // Bounded so copyrighted text never piles up; it is never written to disk.
+  constructor(ttlMinutes: number = 30, maxEntries: number = 20) {
     this.ttlMs = ttlMinutes * 60 * 1000
+    this.maxEntries = maxEntries
   }
 
   private key(version: string, bookNr: number, chapter: number): string {
@@ -29,7 +32,11 @@ export class VerseCache {
   }
 
   set(version: string, bookNr: number, chapter: number, data: VerseData[]): void {
-    this.cache.set(this.key(version, bookNr, chapter), { data, timestamp: Date.now() })
+    const k = this.key(version, bookNr, chapter)
+    this.cache.delete(k)
+    this.cache.set(k, { data, timestamp: Date.now() })
+    // Map keeps insertion order, so the first key is the oldest.
+    if (this.cache.size > this.maxEntries) this.cache.delete(this.cache.keys().next().value!)
   }
 
   clear(): void {

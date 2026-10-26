@@ -31,17 +31,17 @@ export class BibleSettingsTab extends PluginSettingTab {
         items: [
           {
             name: 'Default version',
-            desc: 'Bible version for search results and the {verses} token.',
+            desc: 'Bible version for search results and the {verses} token. Korean versions are fetched from bskorea.or.kr, ESV and KJV from bolls.life.',
             control: { type: 'dropdown', key: 'defaultVersion', options: versionOptions() },
           },
           {
             name: 'Korean version',
-            desc: 'Korean version for the {versesKo} token.',
+            desc: 'Korean version for the {versesKo} token, fetched from bskorea.or.kr.',
             control: { type: 'dropdown', key: 'koreanVersion', options: versionOptions('ko') },
           },
           {
             name: 'English version',
-            desc: 'English version for the {versesEn} token.',
+            desc: 'English version for the {versesEn} token, fetched from bolls.life.',
             control: { type: 'dropdown', key: 'englishVersion', options: versionOptions('en') },
           },
         ],
@@ -69,6 +69,11 @@ export class BibleSettingsTab extends PluginSettingTab {
             name: 'Show verse numbers',
             desc: 'Number each verse when inserting more than one.',
             control: { type: 'toggle', key: 'showVerseNumbers' },
+          },
+          {
+            name: 'Append source line',
+            desc: 'Credit the translation and the site it came from under each inserted passage.',
+            control: { type: 'toggle', key: 'appendSourceLine' },
           },
         ],
       },
