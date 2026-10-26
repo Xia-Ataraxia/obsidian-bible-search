@@ -50,7 +50,7 @@ export default class BibleSearchPlugin extends Plugin {
 
   async onload(): Promise<void> {
     await this.loadSettings()
-    this.notices = new PluginNotices(this, NOTICE_CATALOG, 'Bible')
+    this.notices = new PluginNotices(this, NOTICE_CATALOG, this.manifest.name)
     this.cache = new VerseCache(this.settings.cacheTtlMinutes)
 
     this.addCommand({

@@ -5,7 +5,7 @@
  * owned by this repo rather than inherited from a shared implementation file.
  */
 
-.plugin-notice {
+.bible-search-notice {
 	display: flex;
 	flex-direction: column;
 	gap: var(--size-4-1);
@@ -13,7 +13,7 @@
 	color: inherit;
 }
 
-.plugin-notice-head {
+.bible-search-notice-head {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -23,35 +23,35 @@
 	opacity: 0.7;
 }
 
-.plugin-notice-content {
+.bible-search-notice-content {
 	margin: 0;
 	font-size: var(--font-ui-small);
 	color: inherit;
 	white-space: pre-wrap;
 }
 
-.plugin-notice-actions {
+.bible-search-notice-actions {
 	display: flex;
 	align-items: center;
 	gap: var(--size-4-2);
 }
 
-.plugin-notice-btn {
+.bible-search-notice-btn {
 	font-size: var(--font-ui-smaller);
 }
 
-.plugin-notice-mute {
+.bible-search-notice-mute {
 	margin: calc(var(--size-2-2) * -1) calc(var(--size-2-2) * -1) calc(var(--size-2-2) * -1) 0;
 	color: inherit;
 	--icon-size: var(--icon-xs);
 }
 
-.plugin-notice-mute:hover {
+.bible-search-notice-mute:hover {
 	color: inherit;
 	background-color: color-mix(in srgb, currentColor 15%, transparent);
 }
 
-.plugin-notice--busy .plugin-notice-content::before,
+.bible-search-notice--busy .bible-search-notice-content::before,
 .bible-search-is-loading .suggestion-empty::before {
 	content: '';
 	display: inline-block;
@@ -61,10 +61,10 @@
 	border-radius: 50%;
 	background: var(--interactive-accent);
 	vertical-align: middle;
-	animation: plugin-notice-pulse 900ms ease-in-out infinite alternate;
+	animation: bible-search-notice-pulse 900ms ease-in-out infinite alternate;
 }
 
-@keyframes plugin-notice-pulse {
+@keyframes bible-search-notice-pulse {
 	from { opacity: 0.35; transform: scale(0.7); }
 }
 
@@ -140,12 +140,12 @@
 	}
 
 	/* Slower, opacity-only pulse so progress stays visible. */
-	.plugin-notice--busy .plugin-notice-content::before,
+	.bible-search-notice--busy .bible-search-notice-content::before,
 	.bible-search-is-loading .suggestion-empty::before {
-		animation: plugin-notice-breathe 1800ms ease-in-out infinite alternate;
+		animation: bible-search-notice-breathe 1800ms ease-in-out infinite alternate;
 	}
 
-	@keyframes plugin-notice-breathe {
+	@keyframes bible-search-notice-breathe {
 		from { opacity: 0.45; }
 	}
 
