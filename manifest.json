@@ -1,6 +1,6 @@
 {
-	"id": "obsidian-bible-search",
-	"name": "Bible Search",
+	"id": "multilingual-bible-search",
+	"name": "Multilingual Bible Search",
 	"version": "1.4.0",
 	"minAppVersion": "1.13.0",
 	"description": "Search Korean/English Bible verses and insert with configurable template format.",

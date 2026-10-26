@@ -29,13 +29,13 @@ Expected proof:
 
 Workspace catalog reference:
 
-- `obsidian vault="Test" plugin:reload id="obsidian-bible-search"`
+- `obsidian vault="Test" plugin:reload id="multilingual-bible-search"`
 
 ### 2. Trigger the command
 
 Run the search command:
 
-- `Bible Search: Search verse`
+- `Multilingual Bible Search: Search verse`
 
 Expected proof:
 
@@ -44,7 +44,7 @@ Expected proof:
 
 Workspace catalog reference:
 
-- `obsidian vault="Test" command id="obsidian-bible-search:search-bible-verse"`
+- `obsidian vault="Test" command id="multilingual-bible-search:search-bible-verse"`
 
 ### 3. Prove modal interaction
 
