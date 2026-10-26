@@ -31,3 +31,7 @@ test-results.xml
 .omc/state/
 
 dist/
+
+# synced from boiler-template
+.claude/
+.omc/
