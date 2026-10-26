@@ -82,9 +82,18 @@
 }
 
 /* Settings */
+/* The template is the first item in its group; stack it so the textarea gets the full row. */
+.bible-search-format-group .setting-item:first-child {
+	flex-wrap: wrap;
+}
+
+.bible-search-format-group .setting-item:first-child .setting-item-control {
+	flex-basis: 100%;
+	margin-top: var(--size-4-2);
+}
+
 .bible-search-format-group textarea {
-	width: 42ch;
-	max-width: 100%;
+	width: 100%;
 	font-family: var(--font-monospace);
 	font-size: var(--font-ui-small);
 	resize: vertical;

@@ -57,11 +57,12 @@ export class BibleSettingsTab extends PluginSettingTab {
               'Template for inserted verses. Available tokens: ' +
               '{bookKo}, {bookEn}, {chapter}, {range}, {verses}, {versesKo}, {versesEn}, ' +
               '{version}, {versionKo}, {versionEn}, {calloutType}.',
-            control: { type: 'textarea', key: 'formatTemplate', placeholder: DEFAULT_FORMAT_TEMPLATE, rows: 4 },
+            control: { type: 'textarea', key: 'formatTemplate', placeholder: DEFAULT_FORMAT_TEMPLATE, rows: 5 },
           },
           {
             name: 'Callout type',
             desc: 'Fills the {calloutType} token, e.g. bible or quote.',
+            visible: () => this.usesCalloutType(),
             control: { type: 'text', key: 'calloutType', placeholder: 'bible' },
           },
           {
@@ -98,6 +99,10 @@ export class BibleSettingsTab extends PluginSettingTab {
     ]
   }
 
+  private usesCalloutType(): boolean {
+    return this.plugin.settings.formatTemplate.includes('{calloutType}')
+  }
+
   hide(): void {
     this.saveSoon.run()
   }
@@ -109,7 +114,9 @@ export class BibleSettingsTab extends PluginSettingTab {
   setControlValue(key: string, value: unknown): void {
     const settingKey = key as keyof BibleSearchSettings
     const settings: Record<string, unknown> = this.plugin.settings
+    const hadCallout = this.usesCalloutType()
     settings[settingKey] = value === '' ? EMPTY_FALLBACKS[settingKey] ?? value : value
+    if (this.usesCalloutType() !== hadCallout) this.update()
     if (settingKey === 'cacheEnabled' && value === false) this.plugin.cache.clear()
     this.saveSoon()
   }
