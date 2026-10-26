@@ -19,5 +19,5 @@ The repo is private (Bible text copyright) and not in the community directory. B
 
 ## Gotchas
 
-- manifest `id` is `obsidian-bible-search` (contains "obsidian"); published id, never change it.
+- manifest `id` is `korean-bible-search`, name "Korean Bible Search" (renamed from `obsidian-bible-search` before the Community listing: ids and names must be unique and ids may not contain "obsidian"). Repo and package stay `obsidian-bible-search`.
 - Settings use `getSettingDefinitions()` (minAppVersion 1.13.0); `setControlValue` in `BibleSettingsTab` applies empty-value fallbacks and clears the cache when disabled.

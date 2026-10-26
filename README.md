@@ -1,8 +1,8 @@
-# Bible Search
+# Korean Bible Search
 
 Search Korean/English Bible verses and insert with configurable template format.
 
-![Searching for John 3:16 in the Bible Search modal and inserting it as a quote with a working [[John 3|John 3:16]] link, the Korean text and the English (ESV) text.](https://raw.githubusercontent.com/Xia-Ataraxia/obsidian-bible-search/main/docs/assets/demo.webp)
+![Searching for John 3:16 in the Korean Bible Search modal and inserting it as a quote with a working [[John 3|John 3:16]] link, the Korean text and the English (ESV) text.](https://raw.githubusercontent.com/Xia-Ataraxia/obsidian-bible-search/main/docs/assets/demo.webp)
 
 ## Features
 
@@ -24,7 +24,7 @@ Settings: Korean and English version, format template, callout type, show verse 
 
 This plugin is not in the Community plugins directory because of copyright concerns with Bible text.
 
-**Manual**: download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/Xia-Ataraxia/obsidian-bible-search/releases/latest) into `<vault>/<configDir>/plugins/obsidian-bible-search/`, then enable the plugin. `<configDir>` is your vault's configuration folder (`.obsidian` by default).
+**Manual**: download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/Xia-Ataraxia/obsidian-bible-search/releases/latest) into `<vault>/<configDir>/plugins/korean-bible-search/`, then enable the plugin. `<configDir>` is your vault's configuration folder (`.obsidian` by default).
 
 ## Network and sources
 
