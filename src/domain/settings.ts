@@ -17,6 +17,7 @@ export interface BibleSearchSettings {
   formatTemplate: string
   calloutType: string
   showVerseNumbers: boolean
+  appendSourceLine: boolean
   cacheEnabled: boolean
   cacheTtlMinutes: number
   plugin_notices: { muted: Record<string, boolean> }
@@ -30,6 +31,7 @@ export const DEFAULT_SETTINGS: BibleSearchSettings = {
   formatTemplate: DEFAULT_FORMAT_TEMPLATE,
   calloutType: 'bible',
   showVerseNumbers: true,
+  appendSourceLine: true,
   cacheEnabled: true,
   cacheTtlMinutes: 30,
   plugin_notices: { muted: {} },

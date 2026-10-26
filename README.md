@@ -18,7 +18,7 @@ Search Korean/English Bible verses and insert with configurable template format.
 3. Type a reference such as `John 3:16` or `요한복음 3:16-18`.
 4. Select the verse to insert it using your template.
 
-Settings: Korean and English version, format template, callout type, show verse numbers, cache on or off, and cache TTL (default 30 minutes).
+Settings: Korean and English version, format template, callout type, show verse numbers, append source line, and cache on or off.
 
 ## Installation
 
@@ -26,10 +26,19 @@ This plugin is not in the Community plugins directory because of copyright conce
 
 **Manual**: download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/Xia-Ataraxia/obsidian-bible-search/releases/latest) into `<vault>/<configDir>/plugins/obsidian-bible-search/`, then enable the plugin. `<configDir>` is your vault's configuration folder (`.obsidian` by default).
 
-## Disclosures
+## Network and sources
 
-- **Network use**: verse text is fetched when you search. Requests go to `bolls.life` for ESV and KJV, and to `www.bskorea.or.kr` (the Korean Bible Society) for GAE, KRV and NIR. The book, chapter and version you search for is sent. Fetched chapters are cached in memory only.
-- **Telemetry**: none.
+Verse text is fetched on demand from two public sites:
+
+| Versions | Host |
+|---|---|
+| 개역개정 (GAE), 개역한글 (KRV), 새번역 (NIR) | `www.bskorea.or.kr` (Korean Bible Society) |
+| ESV, KJV | `bolls.life` |
+
+- **What is sent**: the version, book and chapter. Nothing from your notes is ever sent. No analytics or telemetry.
+- **When**: only on a user action. Picking a chapter fetches that one chapter; inserting a passage may fetch the same chapter in up to two more versions when your template uses `{versesKo}` or `{versesEn}`. Nothing is prefetched or downloaded in bulk.
+- **Caching**: fetched chapters live in memory only, at most 20 chapters for 30 minutes, and are dropped when Obsidian closes or the cache is turned off. Verse text is never written to disk.
+- **Rights**: KJV is public domain. ESV is © Crossway; 개역개정, 개역한글 and 새번역 are © 대한성서공회. Inserted passages end with a source line crediting the translation and site; turn it off with **Append source line**.
 
 ## Development
 

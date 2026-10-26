@@ -50,4 +50,13 @@ describe('VerseCache', () => {
     expect(cache.get('KJV', 1, 2)).toEqual(altVerses)
     expect(cache.get('KRV', 1, 1)).toBeNull()
   })
+
+  it('evicts the oldest chapter past the entry cap', () => {
+    const small = new VerseCache(30, 2)
+    small.set('KJV', 1, 1, sampleVerses)
+    small.set('KJV', 1, 2, sampleVerses)
+    small.set('KJV', 1, 3, sampleVerses)
+    expect(small.get('KJV', 1, 1)).toBeNull()
+    expect(small.get('KJV', 1, 3)).toEqual(sampleVerses)
+  })
 })

@@ -22,6 +22,7 @@ import { BibleSearchSettings } from '../domain/settings'
 import { detectRequiredFetches } from '../utils/resolve-template'
 import { FetchTimeoutError } from '../utils/resilient-fetch'
 import { PluginNotices } from './plugin-notices'
+import { VERSION_SOURCES, appendSourceLine, sourceCredit } from '../domain/attribution'
 
 const PLACEHOLDER = {
   book: 'Type book name (e.g. 요, Genesis, 창세기)',
@@ -52,6 +53,15 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
     this.cache = cache
     this.notices = notices
     this.setPlaceholder(PLACEHOLDER.book)
+    this.renderSourceCredit()
+  }
+
+  private renderSourceCredit(): void {
+    const source = VERSION_SOURCES[this.settings.defaultVersion]
+    if (!source) return
+    const el = this.modalEl.createDiv({ cls: 'bible-search-source' })
+    el.appendText(`${sourceCredit(source)} · `)
+    el.createEl('a', { text: source.host, href: source.url })
   }
 
   private updatePlaceholder(mode: 'book' | 'chapter' | 'verse'): void {
@@ -236,8 +246,14 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
       const formatted = formatVerses(selected, ref, this.settings, extraVerses).trimEnd()
       // Every version the template needs failed; the notice above already says so.
       if (formatted === '') return
+      const versions = [
+        ...(required.needsDefault ? [version] : []),
+        ...(extraVerses.korean ? [this.settings.koreanVersion] : []),
+        ...(extraVerses.english ? [this.settings.englishVersion] : []),
+      ]
+      const text = this.settings.appendSourceLine ? appendSourceLine(formatted, versions) : formatted
       // A blank line keeps the next insert from joining this callout.
-      this.editor.replaceSelection(`${formatted}\n\n`)
+      this.editor.replaceSelection(`${text}\n\n`)
     } catch (error) {
       if (error instanceof FetchTimeoutError) {
         this.notices.show('fetch_timeout')
