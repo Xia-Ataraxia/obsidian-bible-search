@@ -1,4 +1,4 @@
-import { setIcon } from 'obsidian'
+import { setIcon, setTooltip } from 'obsidian'
 
 interface BuildNoticeFragmentOptions {
 	id: string
@@ -14,21 +14,15 @@ export function buildNoticeFragment(opts: BuildNoticeFragmentOptions): DocumentF
 	const fragment = createFragment()
 	const wrapper = createDiv({ cls: opts.busy ? 'plugin-notice plugin-notice--busy' : 'plugin-notice' })
 
-	wrapper.appendChild(createEl('p', { cls: 'plugin-notice-head', text: `[${opts.prefix}]` }))
+	const head = wrapper.createDiv({ cls: 'plugin-notice-head' })
+	head.createSpan({ text: opts.prefix })
+	if (!opts.immutable) {
+		head.appendChild(createMuteButton(opts.id, opts.onMute))
+	}
 	wrapper.appendChild(createEl('p', { cls: 'plugin-notice-content', text: opts.text }))
 
-	const actions = createDiv({ cls: 'plugin-notice-actions' })
-
 	if (opts.button?.text && typeof opts.button.callback === 'function') {
-		actions.appendChild(createActionButton(opts.button.text, opts.button.callback))
-	}
-
-	if (!opts.immutable) {
-		actions.appendChild(createMuteButton(opts.id, opts.onMute))
-	}
-
-	if (actions.childElementCount > 0) {
-		wrapper.appendChild(actions)
+		wrapper.createDiv({ cls: 'plugin-notice-actions' }).appendChild(createActionButton(opts.button.text, opts.button.callback))
 	}
 
 	fragment.appendChild(wrapper)
@@ -42,9 +36,12 @@ function createActionButton(text: string, callback: () => void): HTMLButtonEleme
 }
 
 function createMuteButton(id: string, onMute: (id: string) => void): HTMLButtonElement {
-	const button = createEl('button', { cls: 'plugin-notice-btn plugin-notice-btn--mute', type: 'button' })
-	button.setAttribute('aria-label', `Mute notice: ${id}`)
+	const button = createEl('button', { cls: 'clickable-icon plugin-notice-mute', type: 'button' })
 	setIcon(button, 'bell-off')
-	button.addEventListener('click', () => onMute(id))
+	setTooltip(button, 'Mute this notice')
+	button.addEventListener('click', (evt) => {
+		evt.stopPropagation()
+		onMute(id)
+	})
 	return button
 }
