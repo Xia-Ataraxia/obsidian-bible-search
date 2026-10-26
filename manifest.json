@@ -1,7 +1,7 @@
 {
 	"id": "multilingual-bible-search",
 	"name": "Multilingual Bible Search",
-	"version": "1.4.2",
+	"version": "1.4.3",
 	"minAppVersion": "1.13.0",
 	"description": "Search Korean/English Bible verses and insert with configurable template format.",
 	"author": "Beomsu Koh",
