@@ -140,14 +140,14 @@ export function renderBibleSuggestion(
     return
   }
   if (item.type === 'verse') {
-    const row = el.createSpan()
+    const row = el.createSpan({ cls: 'bible-search-verse' })
     row.createSpan({ text: `${item.verse}절`, cls: 'bible-search-verse-nr' })
     row.appendText(item.text)
     if (isFirst) el.createSpan( { text: 'Enter to insert', cls: 'bible-search-hint' })
     return
   }
   const label = item.verseStart === item.verseEnd ? `${item.verseStart}` : `${item.verseStart}-${item.verseEnd}`
-  const row = el.createSpan()
+  const row = el.createSpan({ cls: 'bible-search-verse' })
   row.createSpan({ text: `${label}절`, cls: 'bible-search-verse-nr' })
   row.appendText(item.preview)
   if (isFirst) el.createSpan( { text: 'Enter to insert', cls: 'bible-search-hint' })

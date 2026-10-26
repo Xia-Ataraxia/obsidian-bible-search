@@ -112,8 +112,15 @@
 	animation: bible-hint-in 300ms ease 120ms backwards;
 }
 
+.bible-search-verse {
+	display: flex;
+	gap: var(--size-4-2);
+}
+
 .bible-search-verse-nr {
-	margin-right: var(--size-4-2);
+	flex-shrink: 0;
+	min-width: 3em;
+	text-align: end;
 	color: var(--text-muted);
 	font-variant-numeric: tabular-nums;
 }
