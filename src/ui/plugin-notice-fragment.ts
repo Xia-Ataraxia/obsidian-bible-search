@@ -1,4 +1,4 @@
-import { setIcon } from 'obsidian'
+import { setIcon, setTooltip } from 'obsidian'
 
 interface BuildNoticeFragmentOptions {
 	id: string
@@ -12,23 +12,17 @@ interface BuildNoticeFragmentOptions {
 
 export function buildNoticeFragment(opts: BuildNoticeFragmentOptions): DocumentFragment {
 	const fragment = createFragment()
-	const wrapper = createDiv({ cls: opts.busy ? 'plugin-notice plugin-notice--busy' : 'plugin-notice' })
+	const wrapper = createDiv({ cls: opts.busy ? 'bible-search-notice bible-search-notice--busy' : 'bible-search-notice' })
 
-	wrapper.appendChild(createEl('p', { cls: 'plugin-notice-head', text: `[${opts.prefix}]` }))
-	wrapper.appendChild(createEl('p', { cls: 'plugin-notice-content', text: opts.text }))
-
-	const actions = createDiv({ cls: 'plugin-notice-actions' })
+	wrapper.createDiv({ cls: 'bible-search-notice-head', text: opts.prefix })
+	const row = wrapper.createDiv({ cls: 'bible-search-notice-row' })
+	row.createEl('p', { cls: 'bible-search-notice-content', text: opts.text })
+	if (!opts.immutable) {
+		row.appendChild(createMuteButton(opts.id, opts.onMute))
+	}
 
 	if (opts.button?.text && typeof opts.button.callback === 'function') {
-		actions.appendChild(createActionButton(opts.button.text, opts.button.callback))
-	}
-
-	if (!opts.immutable) {
-		actions.appendChild(createMuteButton(opts.id, opts.onMute))
-	}
-
-	if (actions.childElementCount > 0) {
-		wrapper.appendChild(actions)
+		wrapper.createDiv({ cls: 'bible-search-notice-actions' }).appendChild(createActionButton(opts.button.text, opts.button.callback))
 	}
 
 	fragment.appendChild(wrapper)
@@ -36,15 +30,18 @@ export function buildNoticeFragment(opts: BuildNoticeFragmentOptions): DocumentF
 }
 
 function createActionButton(text: string, callback: () => void): HTMLButtonElement {
-	const button = createEl('button', { cls: 'plugin-notice-btn', type: 'button', text })
+	const button = createEl('button', { cls: 'bible-search-notice-btn', type: 'button', text })
 	button.addEventListener('click', callback)
 	return button
 }
 
 function createMuteButton(id: string, onMute: (id: string) => void): HTMLButtonElement {
-	const button = createEl('button', { cls: 'plugin-notice-btn plugin-notice-btn--mute', type: 'button' })
-	button.setAttribute('aria-label', `Mute notice: ${id}`)
+	const button = createEl('button', { cls: 'clickable-icon bible-search-notice-mute', type: 'button' })
 	setIcon(button, 'bell-off')
-	button.addEventListener('click', () => onMute(id))
+	setTooltip(button, 'Mute this notice')
+	button.addEventListener('click', (evt) => {
+		evt.stopPropagation()
+		onMute(id)
+	})
 	return button
 }
