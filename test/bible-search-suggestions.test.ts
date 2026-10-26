@@ -8,6 +8,9 @@ import {
   buildVerseSuggestions,
   matchBooks,
   outOfRangeText,
+  noBookText,
+  loadingText,
+  loadFailedText,
 } from '../src/ui/bible-search-suggestions'
 
 const JOHN = BIBLE_BOOKS.find(book => book.ko === '요한복음')!
@@ -46,7 +49,7 @@ describe('bible-search-suggestions', () => {
       verseEnd: 17,
     })
     if (suggestions[0]?.type === 'range') {
-      expect(suggestions[0].preview.endsWith('...')).toBe(true)
+      expect(suggestions[0].preview.endsWith('…')).toBe(true)
     }
   })
 
@@ -60,7 +63,7 @@ describe('bible-search-suggestions', () => {
     expect(suggestions[0]).toMatchObject({ type: 'verse', verse: 1, text: 'short' })
     expect(suggestions[1]).toMatchObject({ type: 'verse', verse: 16 })
     if (suggestions[1]?.type === 'verse') {
-      expect(suggestions[1].text.endsWith('...')).toBe(true)
+      expect(suggestions[1].text.endsWith('…')).toBe(true)
     }
   })
 
@@ -77,5 +80,12 @@ describe('bible-search-suggestions', () => {
     expect(outOfRangeText(JOHN, 3, verses)).toBe('요한복음 3장은 36절까지 있습니다')
     expect(outOfRangeText(BIBLE_BOOKS[0]!, 51)).toBe('창세기는 50장까지 있습니다')
     expect(outOfRangeText(BIBLE_BOOKS[18]!, 151)).toBe('시편은 150편까지 있습니다')
+  })
+
+  it('names the book and chapter in loading, failure and no-match states', () => {
+    expect(noBookText('zzz')).toBe("'zzz'에 맞는 책이 없습니다")
+    expect(loadingText(JOHN, 3)).toBe('요한복음 3장 불러오는 중')
+    expect(loadingText(BIBLE_BOOKS[18]!, 23)).toBe('시편 23편 불러오는 중')
+    expect(loadFailedText(JOHN, 3)).toBe('요한복음 3장을 불러오지 못했습니다. 연결을 확인하고 다시 입력하세요')
   })
 })

@@ -15,7 +15,7 @@ function fuzzyMatch(query: string, text: string): boolean {
 }
 
 function truncate(text: string, max: number): string {
-  return text.length > max ? text.slice(0, max) + '...' : text
+  return text.length > max ? text.slice(0, max).trimEnd() + '…' : text
 }
 
 export function matchBooks(query: string): BibleBookEntry[] {
@@ -58,13 +58,29 @@ function topic(word: string): string {
   return code >= 0 && code < 11172 && code % 28 === 0 ? '는' : '은'
 }
 
+// Psalms count 편, every other book 장.
+function chapterUnit(book: BibleBookEntry): string {
+  return book.nr === 19 ? '편' : '장'
+}
+
 /** Empty-state text for a reference past the end of the book or chapter. */
 export function outOfRangeText(book: BibleBookEntry, chapter: number, verses?: VerseData[]): string {
-  // Psalms count 편, every other book 장.
-  const unit = book.nr === 19 ? '편' : '장'
+  const unit = chapterUnit(book)
   if (chapter < 1 || chapter > book.maxChapter) return `${book.ko}${topic(book.ko)} ${book.maxChapter}${unit}까지 있습니다`
   const last = verses?.[verses.length - 1]?.verse ?? 0
   return `${book.ko} ${chapter}${unit}은 ${last}절까지 있습니다`
+}
+
+export function noBookText(query: string): string {
+  return `'${query}'에 맞는 책이 없습니다`
+}
+
+export function loadingText(book: BibleBookEntry, chapter: number): string {
+  return `${book.ko} ${chapter}${chapterUnit(book)} 불러오는 중`
+}
+
+export function loadFailedText(book: BibleBookEntry, chapter: number): string {
+  return `${book.ko} ${chapter}${chapterUnit(book)}을 불러오지 못했습니다. 연결을 확인하고 다시 입력하세요`
 }
 
 export function buildRangeSuggestion(
@@ -124,11 +140,15 @@ export function renderBibleSuggestion(
     return
   }
   if (item.type === 'verse') {
-    el.createSpan( { text: `${item.verse}절  ${item.text}` })
+    const row = el.createSpan()
+    row.createSpan({ text: `${item.verse}절`, cls: 'bible-search-verse-nr' })
+    row.appendText(item.text)
     if (isFirst) el.createSpan( { text: 'Enter to insert', cls: 'bible-search-hint' })
     return
   }
   const label = item.verseStart === item.verseEnd ? `${item.verseStart}` : `${item.verseStart}-${item.verseEnd}`
-  el.createSpan( { text: `${label}절  ${item.preview}` })
+  const row = el.createSpan()
+  row.createSpan({ text: `${label}절`, cls: 'bible-search-verse-nr' })
+  row.appendText(item.preview)
   if (isFirst) el.createSpan( { text: 'Enter to insert', cls: 'bible-search-hint' })
 }
