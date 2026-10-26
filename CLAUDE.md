@@ -4,7 +4,7 @@ Korean/English Bible verse search plugin for Obsidian. Root `AGENTS.md` rules ap
 
 ## Distribution
 
-The repo is private (Bible text copyright) and not in the community directory. BRAT cannot fetch releases without a PAT: copy `dist/main.js` + `dist/manifest.json` into a vault's plugin folder, or `gh release download --repo Xia-Ataraxia/obsidian-bible-search`.
+The repo is public and not yet in the community directory. Install with BRAT (`Xia-Ataraxia/obsidian-bible-search`), or copy `dist/main.js`, `dist/manifest.json` and `dist/styles.css` into `<configDir>/plugins/multilingual-bible-search/`.
 
 ## Commands
 
@@ -19,5 +19,5 @@ The repo is private (Bible text copyright) and not in the community directory. B
 
 ## Gotchas
 
-- manifest `id` is `korean-bible-search`, name "Korean Bible Search" (renamed from `obsidian-bible-search` before the Community listing: ids and names must be unique and ids may not contain "obsidian"). Repo and package stay `obsidian-bible-search`.
+- manifest `id` is `multilingual-bible-search`, name "Multilingual Bible Search" (renamed from `obsidian-bible-search` before the Community listing: ids and names must be unique and ids may not contain "obsidian"). Repo and package stay `obsidian-bible-search`.
 - Settings use `getSettingDefinitions()` (minAppVersion 1.13.0); `setControlValue` in `BibleSettingsTab` applies empty-value fallbacks and clears the cache when disabled.
