@@ -138,7 +138,6 @@
 
 .bible-search-source a {
 	color: inherit;
-	text-decoration-color: var(--text-faint);
 	transition: color 120ms ease;
 }
 
