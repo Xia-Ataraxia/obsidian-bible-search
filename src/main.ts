@@ -56,6 +56,7 @@ export default class BibleSearchPlugin extends Plugin {
     this.addCommand({
       id: 'search-bible-verse',
       name: 'Search verse',
+      icon: 'book-open',
       editorCallback: (editor: Editor) => {
         new BibleSearchModal(this.app, editor, this.settings, this.cache, this.notices).open()
       },
