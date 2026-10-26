@@ -135,7 +135,7 @@ export function renderBibleSuggestion(
     return
   }
   if (item.type === 'chapter') {
-    el.createSpan( { text: `${item.chapter}장` })
+    el.createSpan( { text: `${item.chapter}${chapterUnit(item.book)}` })
     if (isFirst) el.createSpan( { text: 'Enter to select', cls: 'bible-search-hint' })
     return
   }
