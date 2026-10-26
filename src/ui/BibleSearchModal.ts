@@ -5,7 +5,10 @@ import {
   buildChapterSuggestions,
   buildRangeSuggestion,
   buildVerseSuggestions,
+  loadFailedText,
+  loadingText,
   matchBooks,
+  noBookText,
   outOfRangeText,
   renderBibleSuggestion,
 } from './bible-search-suggestions'
@@ -60,11 +63,14 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
     const prevQuery = this.lastQuery
     this.lastQuery = query
     this.emptyStateText = this.defaultEmptyText
+    this.modalEl.removeClass('bible-search-is-loading')
     const state = parseModalInput(query)
 
     if (state.mode === 'book') {
       this.updatePlaceholder('book')
-      return matchBooks(state.query).map(book => ({ type: 'book' as const, book }))
+      const books = matchBooks(state.query)
+      if (books.length === 0) this.emptyStateText = noBookText(state.query)
+      return books.map(book => ({ type: 'book' as const, book }))
     }
 
     if (state.mode === 'chapter') {
@@ -96,19 +102,26 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
     if (this.chapterCache?.key === cacheKey) {
       verses = this.chapterCache.verses
     } else {
+      // The auto-advance path renders this query's [] right away; the timer swaps out a stale list.
+      this.emptyStateText = loadingText(book, chapter)
+      this.modalEl.addClass('bible-search-is-loading')
+      const loadingTimer = window.setTimeout(() => {
+        if (this.lastQuery !== query) return
+        this.resultContainerEl.empty()
+        this.resultContainerEl.createDiv({ cls: 'suggestion-empty', text: this.emptyStateText })
+      }, 150)
       try {
         verses = await fetchChapterVerses(
           this.settings.defaultVersion, book.nr, chapter,
           this.cache, this.settings.cacheEnabled,
         )
       } catch (err) {
-        if (err instanceof FetchTimeoutError) {
-          this.notices.show('fetch_timeout', { source: 'Bible', seconds: 10 })
-        } else {
-          console.error('Failed to fetch chapter', err)
-          this.notices.show('fetch_chapter_failed', { bookKo: book.ko, chapter })
-        }
+        console.error('Failed to fetch chapter', err)
+        if (this.lastQuery === query) this.emptyStateText = loadFailedText(book, chapter)
         return []
+      } finally {
+        window.clearTimeout(loadingTimer)
+        if (this.lastQuery === query) this.modalEl.removeClass('bible-search-is-loading')
       }
 
       this.chapterCache = { key: cacheKey, verses }
@@ -227,7 +240,7 @@ export class BibleSearchModal extends SuggestModal<BibleSuggestion> {
       this.editor.replaceSelection(`${formatted}\n\n`)
     } catch (error) {
       if (error instanceof FetchTimeoutError) {
-        this.notices.show('fetch_timeout', { source: 'Bible', seconds: 10 })
+        this.notices.show('fetch_timeout')
       } else {
         console.error('Failed to fetch verses', error)
         this.notices.show('fetch_verse_failed')

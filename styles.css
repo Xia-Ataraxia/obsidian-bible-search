@@ -64,7 +64,8 @@
 	height: 14px;
 }
 
-.plugin-notice--busy .plugin-notice-content::before {
+.plugin-notice--busy .plugin-notice-content::before,
+.bible-search-is-loading .suggestion-empty::before {
 	content: '';
 	display: inline-block;
 	width: 6px;
@@ -102,6 +103,16 @@
 	animation: bible-hint-in 300ms ease 120ms backwards;
 }
 
+.bible-search-verse-nr {
+	margin-right: var(--size-4-2);
+	color: var(--text-muted);
+	font-variant-numeric: tabular-nums;
+}
+
+.is-mobile .bible-search-hint {
+	display: none;
+}
+
 @keyframes bible-suggestion-in {
 	from { opacity: 0; transform: translateY(4px); }
 }
@@ -124,7 +135,8 @@
 	}
 
 	/* Slower, opacity-only pulse so progress stays visible. */
-	.plugin-notice--busy .plugin-notice-content::before {
+	.plugin-notice--busy .plugin-notice-content::before,
+	.bible-search-is-loading .suggestion-empty::before {
 		animation: plugin-notice-breathe 1800ms ease-in-out infinite alternate;
 	}
 

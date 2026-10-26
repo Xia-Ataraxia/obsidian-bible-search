@@ -19,10 +19,6 @@ const NOTICE_CATALOG: NoticeCatalog = {
     template: 'Failed to save settings.',
     timeout: 6000,
   },
-  fetch_chapter_failed: {
-    template: "Couldn't load {{bookKo}} {{chapter}}. Check your connection and try again.",
-    timeout: 6000,
-  },
   no_verses_found: {
     template: 'No verses found for {{bookKo}} {{chapter}}:{{verseStart}}-{{verseEnd}}',
     timeout: 5000,
@@ -42,7 +38,7 @@ const NOTICE_CATALOG: NoticeCatalog = {
     busy: true,
   },
   fetch_timeout: {
-    template: '{{source}} server timed out after {{seconds}}s — retrying may help',
+    template: "The Bible server isn't responding. Try again in a moment.",
     timeout: 6000,
   },
 }
