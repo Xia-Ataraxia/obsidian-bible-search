@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-bible-search",
-	"version": "1.3.13",
+	"version": "1.4.0",
 	"description": "Search Korean/English Bible verses and insert with configurable template format.",
 	"main": "main.js",
 	"type": "module",
